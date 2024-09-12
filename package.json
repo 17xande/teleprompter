@@ -1,0 +1,37 @@
+{
+  "name": "teleprompter",
+  "version": "0.0.1",
+  "description": "A simple web-based teleprompter",
+  "main": "main.go",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./esbuild.js",
+    "build:watch": "node ./esbuild.js --watch",
+    "start": "air",
+    "genCerts": "mkdir certs && openssl genrsa -out ./certs/server.key 2048 && openssl req -new -x509 -key ./certs/server.key -out ./certs/server.pem -days 365"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/17xande/teleprompter.git"
+  },
+  "keywords": [
+    "teleprompter",
+    "go",
+    "web-based"
+  ],
+  "author": "Alexandre Figueiredo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/17xande/teleprompter/issues"
+  },
+  "homepage": "https://github.com/17xande/teleprompter#readme",
+  "devDependencies": {
+    "esbuild": "^0.23.1",
+    "esbuild-plugin-copy": "^2.1.1"
+  },
+  "dependencies": {
+    "@shoelace-style/shoelace": "^2.16.0"
+  },
+  "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
+}
