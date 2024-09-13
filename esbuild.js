@@ -5,15 +5,15 @@ import { copy } from 'esbuild-plugin-copy'
 
 const config = {
   entryPoints: [
-    'internal/server/assets/scripts/viewer.ts',
-    'internal/server/assets/scripts/controller.ts',
-    'internal/server/assets/scripts/presentation.ts',
-    'internal/server/assets/styles/controller.css',
-    'internal/server/assets/styles/viewer.css',
+    'assets/html/index.html',
+    'assets/html/pop.html',
+    'assets/scripts/app.ts',
+    'assets/scripts/pop.ts',
+    'assets/styles/style.css',
   ],
   entryNames: '[dir]/[name]',
-  outdir: 'internal/server/dist/assets',
-  outbase: 'internal/server/assets',
+  outdir: 'dist/assets',
+  outbase: 'assets',
   sourcemap: true,
   format: 'esm',
   bundle: true,

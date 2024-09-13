@@ -1,0 +1,29 @@
+/* @import 'quill/dist/quill.core.css'; */
+@import 'quill/dist/quill.snow.css';
+
+html {
+	/* color: white; */
+	/* background-color: var(--background-color); */
+	font-family: "Fira Code", monospace;
+	font-optical-sizing: auto;
+}
+
+:root {
+	@property --rotation {
+		syntax: "<angle>";
+		inherits: false;
+		initial-value: 0deg;
+	}
+
+	--sidebar-width: 70px;
+	--background-color: hsl(240, 5.9%, 11%);
+	--border-width: 1px;
+	--border-color: hsl(240, 5.9%, 11%);
+}
+
+.square {
+	background-color: orange;
+	height: 50px;
+	width: 50px;
+	rotate: --rotation;
+}
