@@ -8,12 +8,14 @@ html {
 	font-optical-sizing: auto;
 }
 
-:root {
 	@property --rotation {
 		syntax: "<angle>";
 		inherits: false;
-		initial-value: 0deg;
-	}
+		initial-value: 0;
+}
+
+:root {
+
 
 	--sidebar-width: 70px;
 	--background-color: hsl(240, 5.9%, 11%);
@@ -25,5 +27,5 @@ html {
 	background-color: orange;
 	height: 50px;
 	width: 50px;
-	rotate: --rotation;
+	rotate: var(--rotation);
 }

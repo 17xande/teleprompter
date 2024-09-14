@@ -49,9 +49,11 @@ const numScroll = document.querySelector("#numScroll")
 const square = document.querySelector(".square")
 const root = <HTMLHtmlElement>document.querySelector(":root")
 document.addEventListener('wheel', e => {
-	const r = root.style.getPropertyValue("--rotation")
-	const rot = parseInt(r, 10)
-	root.style.setProperty("--rotation", r + e.deltaY)
+	let r = root.style.getPropertyValue("--rotation")
+	if (!r) r = 0
+	else r = parseInt(r, 10)
+	console.log(`r: ${r} delta: ${e.deltaY}`)
+	root.style.setProperty("--rotation", `${r + e.deltaY}deg`)
 })
 
 function update() {
