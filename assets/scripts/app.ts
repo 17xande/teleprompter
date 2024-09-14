@@ -36,24 +36,39 @@ let win: Window
 const btnPop = document.querySelector("#btnPop")
 btnPop?.addEventListener('click', e => {
 	const innerWin = window.open("pop.html", "pop", "popup=true")
-	console.log('trying to pop it')
 	if (!innerWin) {
 		console.error("failed to open window")
 		return
 	}
 
 	win = innerWin
+
+	win.addEventListener('load', e => {
+		update()
+	})
 })
 
-const numScroll = document.querySelector("#numScroll")
-const square = document.querySelector(".square")
 const root = <HTMLHtmlElement>document.querySelector(":root")
+
+type messageScrollSpeed = {
+	scrollSpeed: number,
+}
+
+let scrollSpeed: messageScrollSpeed = {
+	scrollSpeed: 0,
+}
+
 document.addEventListener('wheel', e => {
-	let r = root.style.getPropertyValue("--rotation")
-	if (!r) r = 0
-	else r = parseInt(r, 10)
-	console.log(`r: ${r} delta: ${e.deltaY}`)
-	root.style.setProperty("--rotation", `${r + e.deltaY}deg`)
+	const r = root.style.getPropertyValue("--rotation")
+	let rot = 0
+	if (r) rot = parseInt(r, 10)
+	root.style.setProperty("--rotation", `${rot + e.deltaY}deg`)
+
+	if (!win) return
+
+	console.log(`posting message son`)
+	scrollSpeed.scrollSpeed += e.deltaY
+	win.postMessage(scrollSpeed)
 })
 
 function update() {
