@@ -3,7 +3,7 @@ let accumulatedScroll = 0
 let scrollSpeed = 0
 
 // Function to automatically scroll down the page smoothly, even at low speeds
-function smoothScroll(timestamp) {
+function smoothScroll(timestamp: DOMHighResTimeStamp) {
 	// Calculate the time difference since the last scroll
 	if (lastScrollTime === 0) lastScrollTime = timestamp;
 	const timeElapsed = timestamp - lastScrollTime;
@@ -41,20 +41,42 @@ function updateSpeed(speed: number) {
 
 startSmoothScroll()
 
-type messageScrollSpeed = {
-	scrollSpeed: number,
+type messageWindow = {
+	method: string,
+	args: string | number[],
 }
 
 let sourceWindow: WindowProxy
 
 window.addEventListener('message', e => {
 	if (e.origin !== window.origin) return
-	const msg: messageScrollSpeed = e.data
-	scrollSpeed = msg.scrollSpeed
 	if (!e.source) return
 	// TODO: check properly if e.source is a WindowProxy.
 	sourceWindow = <WindowProxy>e.source
+	const msg: messageWindow = e.data
+	switchMessage(msg)
 })
+
+function switchMessage(msg: messageWindow) {
+	console.log(`message { ${msg.method}: ${msg.args} }`)
+
+	switch (msg.method) {
+		case 'scrollSpeed':
+			scrollSpeed = <number>msg.args[0]
+			break
+		case 'textScale':
+			updateTextScale(<number>msg.args[0])
+			break
+		default:
+			console.error("Invalid message: ${msg}")
+	}
+}
+
+const root = <HTMLHtmlElement>document.querySelector(":root")
+
+function updateTextScale(scale: number) {
+	root.style.setProperty("--textScale", `${scale}rem`)
+}
 
 // const displayMediaOptions: DisplayMediaStreamOptions = {
 // 	monitorTypeSurfaces: "exclude",

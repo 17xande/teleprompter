@@ -1,8 +1,10 @@
 import '@shoelace-style/shoelace/dist/components/drawer/drawer.js'
 import '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js'
+import '@shoelace-style/shoelace/dist/components/range/range.js'
 import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js';
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
+import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
 
 const toolbarOptions: ToolbarConfig = [
 	['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -53,11 +55,10 @@ btnPop?.addEventListener('click', e => {
 
 const root = <HTMLHtmlElement>document.querySelector(":root")
 
-type messageScrollSpeed = {
-	scrollSpeed: number,
+type messageWindow = {
+	method: string,
+	args: string | number[],
 }
-
-
 
 const prgSpeed = <SlProgressBar>document.querySelector("#prgSpeed")
 prgSpeed.addEventListener('wheel', e => {
@@ -65,6 +66,8 @@ prgSpeed.addEventListener('wheel', e => {
 	// let rot = 0
 	// if (r) rot = parseInt(r, 10)
 	// root.style.setProperty("--rotation", `${rot + e.deltaY}deg`)
+
+	e.preventDefault()
 
 	let speed = prgSpeed.value * 10 - 500
 	let percent = prgSpeed.value + e.deltaY / 10
@@ -82,9 +85,23 @@ prgSpeed.addEventListener('wheel', e => {
 	if (!win) return
 
 	console.log(`posting message son`)
-	let msg: messageScrollSpeed = {
-		scrollSpeed: speed,
+	const msg: messageWindow = {
+		method: 'scrollSpeed',
+		args: [speed],
 	}
+	win.postMessage(msg)
+}, { passive: false })
+
+const rngScale = <SlRange>document.querySelector("#rngScale")
+rngScale.addEventListener('sl-change', e => {
+	const msg: messageWindow = {
+		method: 'textScale',
+		args: [rngScale.value],
+	}
+
+	console.log(msg)
+
+	if (!win) return
 	win.postMessage(msg)
 })
 
