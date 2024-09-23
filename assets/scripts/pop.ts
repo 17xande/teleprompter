@@ -45,8 +45,44 @@ type messageScrollSpeed = {
 	scrollSpeed: number,
 }
 
+let sourceWindow: WindowProxy
+
 window.addEventListener('message', e => {
 	if (e.origin !== window.origin) return
 	const msg: messageScrollSpeed = e.data
 	scrollSpeed = msg.scrollSpeed
+	if (!e.source) return
+	// TODO: check properly if e.source is a WindowProxy.
+	sourceWindow = <WindowProxy>e.source
 })
+
+// const displayMediaOptions: DisplayMediaStreamOptions = {
+// 	monitorTypeSurfaces: "exclude",
+// 	preferCurrentTab: true,
+// 	selfBrowserSurface: "include",
+// 	surfaceSwitching: "exclude",
+// 	systemAudio: "exclude",
+// 	monitorTypeSurface: "exclude",
+// }
+
+async function startCapture() {
+	const captureStream = await navigator.mediaDevices.getDisplayMedia().catch(e => console.error(e))
+	if (!captureStream) return
+	let peerConnection = new RTCPeerConnection()
+
+	// Add the captured stream to the WebRTC connection.
+	captureStream.getTracks().forEach(track => peerConnection.addTrack(track, captureStream))
+
+	// Create and send the offer to the receiver.
+	const offer = await peerConnection.createOffer()
+	await peerConnection.setLocalDescription(offer)
+	const offerSDP = peerConnection.localDescription
+
+	// Send to offer to the receiver.
+	const msg = {
+		event: "displayCaptureStream",
+		offer: "",
+	}
+	sourceWindow.postMessage("")
+
+}

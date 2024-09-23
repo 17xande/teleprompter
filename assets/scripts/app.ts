@@ -1,3 +1,6 @@
+import '@shoelace-style/shoelace/dist/components/drawer/drawer.js'
+import '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js'
+import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js';
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 
@@ -54,21 +57,35 @@ type messageScrollSpeed = {
 	scrollSpeed: number,
 }
 
-let scrollSpeed: messageScrollSpeed = {
-	scrollSpeed: 0,
-}
 
-document.addEventListener('wheel', e => {
-	const r = root.style.getPropertyValue("--rotation")
-	let rot = 0
-	if (r) rot = parseInt(r, 10)
-	root.style.setProperty("--rotation", `${rot + e.deltaY}deg`)
+
+const prgSpeed = <SlProgressBar>document.querySelector("#prgSpeed")
+prgSpeed.addEventListener('wheel', e => {
+	// const r = root.style.getPropertyValue("--rotation")
+	// let rot = 0
+	// if (r) rot = parseInt(r, 10)
+	// root.style.setProperty("--rotation", `${rot + e.deltaY}deg`)
+
+	let speed = prgSpeed.value * 10 - 500
+	let percent = prgSpeed.value + e.deltaY / 10
+
+	if (e.deltaY > 0) {
+		percent = Math.min(100, percent)
+	}
+	else {
+		percent = Math.max(0, percent)
+	}
+
+	prgSpeed.value = percent
+	prgSpeed.textContent = speed.toFixed(0) + "pps"
 
 	if (!win) return
 
 	console.log(`posting message son`)
-	scrollSpeed.scrollSpeed += e.deltaY
-	win.postMessage(scrollSpeed)
+	let msg: messageScrollSpeed = {
+		scrollSpeed: speed,
+	}
+	win.postMessage(msg)
 })
 
 function update() {
