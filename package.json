@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/17xande/teleprompter#readme",
   "devDependencies": {
-    "esbuild": "^0.23.1",
+    "esbuild": "^0.24.0",
     "esbuild-plugin-copy": "^2.1.1"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.16.0",
+    "@shoelace-style/shoelace": "^2.17.1",
     "quill": "^2.0.2"
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
