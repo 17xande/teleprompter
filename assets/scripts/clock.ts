@@ -1,28 +1,34 @@
+type duration = {
+	hours?: number
+	minutes?: number
+	seconds?: number
+}
 
 class TPClock extends HTMLTimeElement {
 	static observedAttributes = ['countdown']
+
+	interval: number
+	targetDate: Date
 
 	constructor() {
 		super()
 	}
 
-	tick(): number {
-		let interval = setInterval(() => {
-			this.textContent = new Date().toLocaleTimeString()
-		}, 1000)
-
-
-		return interval
+	tick() {
+		const now = new Date()
+		const diff = new Date(this.targetDate - now)
+		this.textContent = diff.toLocaleTimeString()
 	}
 
 	connectedCallback() {
 		// this.setAttribute('datetime', this.getAttribute('countdown'))
-		let interval = this.tick()
-		console.log(`interval: ${interval}`)
+		this.interval = setInterval(() => {
+			this.tick()
+		}, 1000)
 	}
 
 	disconnectedCallback() {
-		throw new Error('Not implemented')
+		clearInterval(this.interval)
 	}
 
 	adoptedCallback() {
@@ -30,7 +36,13 @@ class TPClock extends HTMLTimeElement {
 	}
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-		throw new Error('Not implemented')
+		if (name === 'countdown') {
+			const [hours, minutes, seconds] = newValue.split(":")
+			this.targetDate = new Date()
+			this.targetDate.setHours(parseInt(hours, 10))
+			this.targetDate.setMinutes(parseInt(minutes, 10))
+			this.targetDate.setSeconds(parseInt(seconds, 10))
+		}
 	}
 }
 
