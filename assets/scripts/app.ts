@@ -1,10 +1,15 @@
 import '@shoelace-style/shoelace/dist/components/drawer/drawer.js'
 import '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js'
 import '@shoelace-style/shoelace/dist/components/range/range.js'
+import '@shoelace-style/shoelace/dist/components/input/input.js'
+import '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js';
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
+import Clock from './clock'
+
+console.log(Clock)
 
 const toolbarOptions: ToolbarConfig = [
 	['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -49,7 +54,7 @@ btnPop?.addEventListener('click', e => {
 	win = innerWin
 
 	win.addEventListener('load', e => {
-		update()
+		updateMain()
 	})
 })
 
@@ -93,7 +98,7 @@ prgSpeed.addEventListener('wheel', e => {
 }, { passive: false })
 
 const rngScale = <SlRange>document.querySelector("#rngScale")
-rngScale.addEventListener('sl-change', e => {
+rngScale.addEventListener('sl-input', e => {
 	const msg: messageWindow = {
 		method: 'textScale',
 		args: [rngScale.value],
@@ -105,14 +110,21 @@ rngScale.addEventListener('sl-change', e => {
 	win.postMessage(msg)
 })
 
-function update() {
+function updateMain() {
 	const editor = <HTMLDivElement>document.querySelector('#editor > .ql-editor')
 	if (!editor) {
 		return console.error("editor not found!")
 	}
 
-	win.document.body.innerHTML = editor.innerHTML
+	const popMain = <HTMLDivElement>win.document.querySelector("#main")
+	popMain.innerHTML = editor.innerHTML
+}
+
+// TODO: I should move all this into a class to manage the popup window state properly.
+function updateContdownClock(time: string) {
+	const popCountdownClock = <HTMLTimeElement>win.document.querySelector("countdownClock")
+	popCountdownClock.textContent = time
 }
 
 globalThis.quill = quill
-globalThis.update = update
+globalThis.update = updateMain
