@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./esbuild.js",
     "build:watch": "node ./esbuild.js --watch",
-    "start": "air",
+    "start": "caddy file-server -r dist/assets --browse --listen :2015",
     "genCerts": "mkdir certs && openssl genrsa -out ./certs/server.key 2048 && openssl req -new -x509 -key ./certs/server.key -out ./certs/server.pem -days 365"
   },
   "repository": {
@@ -31,7 +31,7 @@
     "esbuild-plugin-copy": "^2.1.1"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.17.1",
+    "@shoelace-style/shoelace": "^2.18.0",
     "quill": "^2.0.2"
   },
   "packageManager": "pnpm@9.10.0+sha512.73a29afa36a0d092ece5271de5177ecbf8318d454ecd701343131b8ebc0c1a91c487da46ab77c8e596d6acf1461e3594ced4becedf8921b074fbd8653ed7051c"
