@@ -15,20 +15,45 @@ class TPClock extends HTMLTimeElement {
 	}
 
 	tick() {
-		const now = new Date()
-		const diff = new Date(this.targetDate - now)
-		this.textContent = diff.toLocaleTimeString()
+		this.targetDate.setSeconds(this.targetDate.getSeconds() - 1)
+		this.textContent = this.targetDate.toLocaleTimeString()
 	}
 
-	connectedCallback() {
-		// this.setAttribute('datetime', this.getAttribute('countdown'))
+	start() {
 		this.interval = setInterval(() => {
 			this.tick()
 		}, 1000)
+
+	}
+
+	stop() {
+		clearInterval(this.interval)
+	}
+
+	reset() {
+		this.stop()
+		this.parseCountdown()
+	}
+
+	parseCountdown() {
+		const countdown = this.getAttribute('countdown')
+		if (!countdown) {
+			return
+		}
+		const [hours, minutes, seconds] = countdown.split(':')
+		this.targetDate = new Date()
+		this.targetDate.setHours(parseInt(hours, 10))
+		this.targetDate.setMinutes(parseInt(minutes, 10))
+		this.targetDate.setSeconds(parseInt(seconds, 10))
+		this.textContent = this.targetDate.toLocaleTimeString()
+	}
+
+	connectedCallback() {
+		this.parseCountdown()
 	}
 
 	disconnectedCallback() {
-		clearInterval(this.interval)
+		this.stop()
 	}
 
 	adoptedCallback() {
@@ -37,15 +62,9 @@ class TPClock extends HTMLTimeElement {
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
 		if (name === 'countdown') {
-			const [hours, minutes, seconds] = newValue.split(":")
-			this.targetDate = new Date()
-			this.targetDate.setHours(parseInt(hours, 10))
-			this.targetDate.setMinutes(parseInt(minutes, 10))
-			this.targetDate.setSeconds(parseInt(seconds, 10))
+			this.parseCountdown()
 		}
 	}
 }
-
-customElements.define('tp-clock', TPClock, { extends: 'time' })
 
 export default TPClock

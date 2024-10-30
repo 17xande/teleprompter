@@ -7,9 +7,10 @@ import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
-import Clock from './clock'
+import TPClock from './clock'
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 
-console.log(Clock)
+customElements.define('tp-clock', TPClock, { extends: 'time' })
 
 const toolbarOptions: ToolbarConfig = [
 	['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -121,6 +122,22 @@ function updateMain() {
 }
 
 // TODO: I should move all this into a class to manage the popup window state properly.
+const btnStart = <SlButton>document.querySelector("#btnCountdownStart")
+const btnStop = <SlButton>document.querySelector("#btnCountdownStop")
+const btnReset = <SlButton>document.querySelector("#btnCountdownReset")
+const clock = <TPClock>document.querySelector("#clock")
+btnStart.addEventListener('click', e => {
+	clock.start()
+})
+
+btnStop.addEventListener('click', e => {
+	clock.stop()
+})
+
+btnReset.addEventListener('click', e => {
+	clock.reset()
+})
+
 function updateContdownClock(time: string) {
 	const popCountdownClock = <HTMLTimeElement>win.document.querySelector("countdownClock")
 	popCountdownClock.textContent = time
