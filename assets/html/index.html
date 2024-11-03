@@ -14,14 +14,13 @@
 	<sl-progress-bar id="prgSpeed" value="50" class="progress-bar-values">0pps</sl-progress-bar>
 	<sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="10" step="0.1"></sl-range>
 	<div id="countdownClock">
-		<sl-input id="txtCountdownControl" type="time" defaultValue="00:00" pill clearable></sl-input>
+		<sl-input id="inTimeCountdown" type="time" defaultValue="00:00" step="1" pill clearable></sl-input>
 		<sl-button id="btnCountdownReset">Reset</sl-button>
 		<sl-button id="btnCountdownStart">Start</sl-button>
 		<sl-button id="btnCountdownStop">Stop</sl-button>
-		<sl-input id="txtCountdownViewer" type="time" defaultValue="00:00" pill></sl-input>
+		<time is="tp-clock" id="timeCountdown" countdown="01:02:03">00:00:00</time>
 	</div>
 
-	<time is="tp-clock" id="clock" countdown="01:02:03">00:00:00</time>
 	<div id="toolbar"></div>
 	<div id="editor">
 	</div>

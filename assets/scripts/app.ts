@@ -9,6 +9,7 @@ import { ToolbarConfig } from "quill/modules/toolbar";
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
 import TPClock from './clock'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js'
 
 customElements.define('tp-clock', TPClock, { extends: 'time' })
 
@@ -122,10 +123,12 @@ function updateMain() {
 }
 
 // TODO: I should move all this into a class to manage the popup window state properly.
+const inTimeCountdown = <SlInput>document.querySelector("#inTimeCountdown")
 const btnStart = <SlButton>document.querySelector("#btnCountdownStart")
 const btnStop = <SlButton>document.querySelector("#btnCountdownStop")
 const btnReset = <SlButton>document.querySelector("#btnCountdownReset")
-const clock = <TPClock>document.querySelector("#clock")
+const clock = <TPClock>document.querySelector("#timeCountdown")
+
 btnStart.addEventListener('click', e => {
 	clock.start()
 })
@@ -135,6 +138,7 @@ btnStop.addEventListener('click', e => {
 })
 
 btnReset.addEventListener('click', e => {
+	clock.setAttribute('countdown', inTimeCountdown.value)
 	clock.reset()
 })
 
