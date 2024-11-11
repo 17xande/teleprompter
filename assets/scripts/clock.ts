@@ -1,9 +1,31 @@
-type duration = {
-	hours?: number
-	minutes?: number
-	seconds?: number
+/**
+ * Teleprompter countdown clock control component.
+ */
+class TPClockControl extends HTMLElement {
+	constructor() {
+		super()
+	}
+
+	connectedCallback() {
+
+	}
+
+	disconnectedCallback() {
+		throw new Error("not implemented")
+	}
+
+	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+
+	}
 }
 
+/**
+	* Teleprompter Countdown clock component. Extends HTMLTimeElement.
+	*
+	* Usage:
+	* <time is="tp-clock" countdown="01:02:03"></time>
+	* countdown="hh:mm:ss" to countdown from.
+	*/
 class TPClock extends HTMLTimeElement {
 	static observedAttributes = ['countdown']
 
@@ -67,4 +89,9 @@ class TPClock extends HTMLTimeElement {
 	}
 }
 
-export default TPClock
+function registerClockComponent() {
+	customElements.define('tp-clock', TPClock, { extends: 'time' })
+}
+
+export { TPClock TPClockControl, registerClockComponent }
+

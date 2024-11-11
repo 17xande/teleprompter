@@ -7,11 +7,11 @@ import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
-import TPClock from './clock'
+import { TPClock, registerClockComponent } from './clock'
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js'
 
-customElements.define('tp-clock', TPClock, { extends: 'time' })
+registerClockComponent()
 
 const toolbarOptions: ToolbarConfig = [
 	['bold', 'italic', 'underline', 'strike'],        // toggled buttons
