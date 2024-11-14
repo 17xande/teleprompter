@@ -93,5 +93,5 @@ function registerClockComponent() {
 	customElements.define('tp-clock', TPClock, { extends: 'time' })
 }
 
-export { TPClock TPClockControl, registerClockComponent }
+export { TPClock, TPClockControl, registerClockComponent }
 

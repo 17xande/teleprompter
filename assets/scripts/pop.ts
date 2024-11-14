@@ -39,8 +39,6 @@ function updateSpeed(speed: number) {
 	scrollSpeed = speed  // Update speed in pixels per second
 }
 
-startSmoothScroll()
-
 type messageWindow = {
 	method: string,
 	args: string | number[],
@@ -108,3 +106,5 @@ async function startCapture() {
 	sourceWindow.postMessage("")
 
 }
+
+globalThis.startSmoothScroll = startSmoothScroll

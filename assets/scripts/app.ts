@@ -57,6 +57,7 @@ btnPop?.addEventListener('click', e => {
 
 	win.addEventListener('load', e => {
 		updateMain()
+		win.startSmoothScroll()
 	})
 })
 
