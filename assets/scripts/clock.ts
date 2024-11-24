@@ -1,13 +1,32 @@
+import { SlButton, SlInput } from "@shoelace-style/shoelace"
 /**
  * Teleprompter countdown clock control component.
  */
 class TPClockControl extends HTMLElement {
+	inTimeCountdown: SlInput
+	btnStart: SlButton
+	btnStop: SlButton
+	btnReset: SlButton
+	countdown: TPClock
+	popCountdown: TPClock
+
 	constructor() {
+		// TODO: don't think I need this when extending HTMLElement.
 		super()
 	}
 
 	connectedCallback() {
+		// TODO: import that html template literal function from the vanilla website.
+		this.innerHTML = `
+		<sl-input id="inTimeCountdown" type="time" defaultValue="00:00" step="1" pill clearable></sl-input>
+		<sl-button id="btnCountdownReset">Reset</sl-button>
+		<sl-button id="btnCountdownStart">Start</sl-button>
+		<sl-button id="btnCountdownStop">Stop</sl-button>
+		<time is="tp-clock" id="timeCountdown" countdown="01:02:03">00:00:00</time>
+`
 
+
+		this.update()
 	}
 
 	disconnectedCallback() {
@@ -15,8 +34,35 @@ class TPClockControl extends HTMLElement {
 	}
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-
+		throw new Error("not implemented")
 	}
+
+	update() {
+		this.inTimeCountdown = <SlInput>this.querySelector('#inTimeCountdown')
+		this.btnStart = <SlButton>this.querySelector('#btnCountdownStart')
+		this.btnStop = <SlButton>this.querySelector('#btnCountdownStop')
+		this.btnReset = <SlButton>this.querySelector('#btnCountdownReset')
+		this.countdown = <TPClock>this.querySelector('#timeCountdown')
+
+		this.btnStart.addEventListener('click', e => {
+			this.countdown.start()
+		})
+
+		this.btnStop.addEventListener('click', e => {
+			this.countdown.stop()
+		})
+
+		this.btnReset.addEventListener('click', e => {
+			this.countdown.setAttribute('countdown', this.inTimeCountdown.value)
+			this.popCountdown.setAttribute('countdown', this.inTimeCountdown.value)
+			this.popCountdown.reset()
+			this.countdown.reset()
+		})
+	}
+}
+
+function registerClockControlComponent() {
+	customElements.define('tp-clock-control', TPClockControl)
 }
 
 /**
@@ -93,5 +139,5 @@ function registerClockComponent() {
 	customElements.define('tp-clock', TPClock, { extends: 'time' })
 }
 
-export { TPClock, TPClockControl, registerClockComponent }
+export { TPClock, TPClockControl, registerClockComponent, registerClockControlComponent }
 

@@ -7,11 +7,10 @@ import SlProgressBar from '@shoelace-style/shoelace/dist/components/progress-bar
 import Quill, { QuillOptions } from "quill";
 import { ToolbarConfig } from "quill/modules/toolbar";
 import SlRange from '@shoelace-style/shoelace/dist/components/range/range.js';
-import { TPClock, registerClockComponent } from './clock'
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button.js'
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input.js'
+import { registerClockComponent, registerClockControlComponent, TPClock, TPClockControl } from './clock'
 
 registerClockComponent()
+registerClockControlComponent()
 
 const toolbarOptions: ToolbarConfig = [
 	['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -47,16 +46,24 @@ let win: Window
 
 const btnPop = document.querySelector("#btnPop")
 btnPop?.addEventListener('click', e => {
-	const innerWin = window.open("pop.html", "pop", "popup=true")
+	const innerWin = window.open("pop.html", "pop", "popup=true,width=300,height=320")
 	if (!innerWin) {
 		console.error("failed to open window")
 		return
 	}
 
 	win = innerWin
-
 	win.addEventListener('load', e => {
 		updateMain()
+
+		const tpPopClock = <TPClock>innerWin.document.querySelector('#timeCountdown')
+		const tpClockControl = <TPClockControl>document.querySelector('tp-clock-control')
+		if (!tpPopClock) {
+			throw new Error("tp-clock not found on popup")
+		}
+
+		tpClockControl.popCountdown = tpPopClock
+
 		win.startSmoothScroll()
 	})
 })
@@ -92,6 +99,8 @@ prgSpeed.addEventListener('wheel', e => {
 
 	if (!win) return
 
+	// TODO: don't use postMessage, declare the method on the window, and call it directly.
+
 	console.log(`posting message son`)
 	const msg: messageWindow = {
 		method: 'scrollSpeed',
@@ -109,6 +118,7 @@ rngScale.addEventListener('sl-input', e => {
 
 	console.log(msg)
 
+	// TODO: don't use postMessage, declare the method on the window, and call it directly.
 	if (!win) return
 	win.postMessage(msg)
 })
@@ -121,31 +131,6 @@ function updateMain() {
 
 	const popMain = <HTMLDivElement>win.document.querySelector("#main")
 	popMain.innerHTML = editor.innerHTML
-}
-
-// TODO: I should move all this into a class to manage the popup window state properly.
-const inTimeCountdown = <SlInput>document.querySelector("#inTimeCountdown")
-const btnStart = <SlButton>document.querySelector("#btnCountdownStart")
-const btnStop = <SlButton>document.querySelector("#btnCountdownStop")
-const btnReset = <SlButton>document.querySelector("#btnCountdownReset")
-const clock = <TPClock>document.querySelector("#timeCountdown")
-
-btnStart.addEventListener('click', e => {
-	clock.start()
-})
-
-btnStop.addEventListener('click', e => {
-	clock.stop()
-})
-
-btnReset.addEventListener('click', e => {
-	clock.setAttribute('countdown', inTimeCountdown.value)
-	clock.reset()
-})
-
-function updateContdownClock(time: string) {
-	const popCountdownClock = <HTMLTimeElement>win.document.querySelector("countdownClock")
-	popCountdownClock.textContent = time
 }
 
 globalThis.quill = quill
