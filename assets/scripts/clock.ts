@@ -46,17 +46,25 @@ class TPClockControl extends HTMLElement {
 
 		this.btnStart.addEventListener('click', e => {
 			this.countdown.start()
+			if (this.popCountdown) {
+				this.popCountdown.start()
+			}
 		})
 
 		this.btnStop.addEventListener('click', e => {
 			this.countdown.stop()
+			if (this.popCountdown) {
+				this.popCountdown.stop()
+			}
 		})
 
 		this.btnReset.addEventListener('click', e => {
 			this.countdown.setAttribute('countdown', this.inTimeCountdown.value)
-			this.popCountdown.setAttribute('countdown', this.inTimeCountdown.value)
-			this.popCountdown.reset()
 			this.countdown.reset()
+			if (this.popCountdown) {
+				this.popCountdown.setAttribute('countdown', this.inTimeCountdown.value)
+				this.popCountdown.reset()
+			}
 		})
 	}
 }

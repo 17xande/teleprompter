@@ -57,7 +57,7 @@ btnPop?.addEventListener('click', e => {
 		updateMain()
 
 		const tpPopClock = <TPClock>innerWin.document.querySelector('#timeCountdown')
-		const tpClockControl = <TPClockControl>document.querySelector('tp-clock-control')
+		const tpClockControl = <TPClockControl>document.querySelector('#countdowncontrol')
 		if (!tpPopClock) {
 			throw new Error("tp-clock not found on popup")
 		}

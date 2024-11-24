@@ -1,3 +1,7 @@
+import { registerClockComponent } from "./clock";
+
+registerClockComponent()
+
 let lastScrollTime = 0
 let accumulatedScroll = 0
 let scrollSpeed = 0
