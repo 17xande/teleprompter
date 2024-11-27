@@ -10,14 +10,17 @@
 </head>
 
 <body>
-	<sl-button id="btnPop">Popup</sl-button>
-	<sl-progress-bar id="prgSpeed" value="50" class="progress-bar-values">0pps</sl-progress-bar>
-	<sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="10" step="0.1"></sl-range>
-	<tp-clock-control id="countdowncontrol" countdown="01:02:03"></tp-clock-control>
-
-	<div id="toolbar"></div>
-	<div id="editor">
-	</div>
+	<aside id="controls">
+		<sl-button id="btnPop">Popup</sl-button>
+		<sl-progress-bar id="prgSpeed" value="50" class="progress-bar-values">0pps</sl-progress-bar>
+		<sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="10" step="0.1"></sl-range>
+		<tp-clock-control id="countdowncontrol" countdown="01:02:03"></tp-clock-control>
+	</aside>
+	<main>
+		<div id="toolbar"></div>
+		<div id="editor">
+		</div>
+	</main>
 </body>
 
 </html>

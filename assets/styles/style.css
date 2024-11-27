@@ -23,7 +23,7 @@ html {
 }
 
 :root {
-	--sidebar-width: 70px;
+	--sidebar-width: 300px;
 	--background-color: hsl(240, 5.9%, 11%);
 	--border-width: 1px;
 	--border-color: hsl(240, 5.9%, 11%);
@@ -34,4 +34,16 @@ html {
 	height: 50px;
 	width: 50px;
 	rotate: var(--rotation);
+}
+
+#controls {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: var(--sidebar-width);
+}
+
+main {
+	margin-right: var(--sidebar-width);
 }
