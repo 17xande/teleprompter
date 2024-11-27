@@ -42,10 +42,20 @@ const options: QuillOptions = {
 }
 
 const quill = new Quill('#editor', options)
+quill.on('text-change', () => {
+	const content = quill.getContents()
+	localStorage.setItem('quill-content', JSON.stringify(content))
+})
+
+const storedContent = localStorage.getItem('quill-content')
+if (storedContent) {
+	quill.setContents(JSON.parse(storedContent))
+}
+
 let win: Window
 
 const btnPop = document.querySelector("#btnPop")
-btnPop?.addEventListener('click', e => {
+btnPop?.addEventListener('click', () => {
 	const innerWin = window.open("pop.html", "pop", "popup=true,width=300,height=320")
 	if (!innerWin) {
 		console.error("failed to open window")
@@ -53,7 +63,7 @@ btnPop?.addEventListener('click', e => {
 	}
 
 	win = innerWin
-	win.addEventListener('load', e => {
+	win.addEventListener('load', () => {
 		updateMain()
 
 		const tpPopClock = <TPClock>innerWin.document.querySelector('#timeCountdown')
