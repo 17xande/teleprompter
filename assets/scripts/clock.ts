@@ -81,8 +81,12 @@ function registerClockControlComponent() {
 	* countdown="hh:mm:ss" to countdown from.
 	*/
 class TPClock extends HTMLTimeElement {
+	// TODO: is this actually a good case for inheritance?
+	// Each differenty type of clock having the same methods by slightly different implementations?
 	static observedAttributes = ['countdown']
 
+	// TODO: should this be an enum?
+	type: string
 	interval: number
 	targetDate: Date
 
@@ -90,9 +94,21 @@ class TPClock extends HTMLTimeElement {
 		super()
 	}
 
+
 	tick() {
-		this.targetDate.setSeconds(this.targetDate.getSeconds() - 1)
+		let diff = 1;
+		switch (this.type) {
+			case "clock":
+				this.textContent = new Date().toLocaleTimeString()
+				return
+			case "timer":
+				diff = -1
+				break
+
+		}
+		this.targetDate.setSeconds(this.targetDate.getSeconds() + diff)
 		this.textContent = this.targetDate.toLocaleTimeString()
+
 	}
 
 	start() {
@@ -108,15 +124,15 @@ class TPClock extends HTMLTimeElement {
 
 	reset() {
 		this.stop()
-		this.parseCountdown()
+		this.parseTimer()
 	}
 
-	parseCountdown() {
-		const countdown = this.getAttribute('countdown')
-		if (!countdown) {
-			return
+	parseTimer() {
+		const timer = this.getAttribute('timer')
+		if (!timer) {
+			throw new Error("timer attribute is required for timer type")
 		}
-		const [hours, minutes, seconds] = countdown.split(':')
+		const [hours, minutes, seconds] = timer.split(':')
 		this.targetDate = new Date()
 		this.targetDate.setHours(parseInt(hours, 10))
 		this.targetDate.setMinutes(parseInt(minutes, 10))
@@ -125,7 +141,28 @@ class TPClock extends HTMLTimeElement {
 	}
 
 	connectedCallback() {
-		this.parseCountdown()
+		const clockType = this.getAttribute('type')
+		if (!clockType) {
+			throw Error("type attribute is required")
+		}
+		this.type = clockType
+		switch (clockType) {
+			case "clock":
+				this.start();
+				break
+			case "timer":
+				this.parseTimer()
+				break
+			case "timerUp":
+				this.targetDate = new Date(0, 0)
+				// this.start()
+				break
+			case "countdown":
+				break
+			default:
+				throw new Error(`Unknown clock type: ${clockType}`)
+		}
+
 	}
 
 	disconnectedCallback() {
@@ -137,8 +174,8 @@ class TPClock extends HTMLTimeElement {
 	}
 
 	attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-		if (name === 'countdown') {
-			this.parseCountdown()
+		if (this.type === 'countdown' && name === 'countdown') {
+			this.parseTimer()
 		}
 	}
 }
