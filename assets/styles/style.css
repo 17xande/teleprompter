@@ -44,6 +44,6 @@ html {
 	width: var(--sidebar-width);
 }
 
-main {
+#mainEditor {
 	margin-right: var(--sidebar-width);
 }
