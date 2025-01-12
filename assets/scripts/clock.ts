@@ -18,11 +18,11 @@ class TPClockControl extends HTMLElement {
 	connectedCallback() {
 		// TODO: import that html template literal function from the vanilla website.
 		this.innerHTML = `
-		<sl-input id="inTimeCountdown" type="time" defaultValue="00:00" step="1" pill clearable></sl-input>
+		<sl-input id="inTimeCountdown" type="time" value="00:00:00" step="1" pill clearable></sl-input>
 		<sl-button id="btnCountdownReset">Reset</sl-button>
 		<sl-button id="btnCountdownStart">Start</sl-button>
 		<sl-button id="btnCountdownStop">Stop</sl-button>
-		<time is="tp-clock" id="timeCountdown" countdown="01:02:03">00:00:00</time>
+		<time is="tp-clock" id="timeCountdown" type="timer" timer="00:00:00"></time>
 `
 
 
