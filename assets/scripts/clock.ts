@@ -90,7 +90,6 @@ class TPClock extends HTMLTimeElement {
   interval: number
   targetDate: Date
   negative: boolean
-
   constructor() {
     super()
   }
@@ -114,7 +113,6 @@ class TPClock extends HTMLTimeElement {
         }
         diff = -1
         break
-
     }
     this.targetDate.setSeconds(this.targetDate.getSeconds() + diff)
     if (this.negative) {
