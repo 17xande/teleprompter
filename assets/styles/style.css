@@ -47,3 +47,8 @@ html {
 #mainEditor {
 	margin-right: var(--sidebar-width);
 }
+
+/* TODO: move this to clock.css? Best way of web components css? */
+.negative {
+  color: red;
+}
