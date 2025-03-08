@@ -5,15 +5,15 @@ import { copy } from 'esbuild-plugin-copy'
 
 const config = {
   entryPoints: [
-    'assets/html/index.html',
-    'assets/html/pop.html',
-    'assets/scripts/app.ts',
-    'assets/scripts/pop.ts',
-    'assets/styles/style.css',
+    'src/frontend/html/index.html',
+    'src/frontend/html/pop.html',
+    'src/frontend/scripts/app.ts',
+    'src/frontend/scripts/pop.ts',
+    'src/frontend/styles/style.css',
   ],
   entryNames: '[dir]/[name]',
-  outdir: 'dist/assets',
-  outbase: 'assets',
+  outdir: 'public',
+  outbase: 'src/frontend',
   sourcemap: true,
   format: 'esm',
   bundle: true,
@@ -26,8 +26,8 @@ const config = {
     copy({
       resolveFrom: 'cwd',
       assets: {
-        from: ['./node_modules/@shoelace-style/shoelace/dist/assets/icons/*'],
-        to: ['./internal/server/dist/assets/icons'],
+        from: ['./node_modules/@shoelace-style/shoelace/dist/src/frontend/icons/*'],
+        to: ['./public/frontend/icons'],
       }
     }),
   ],
