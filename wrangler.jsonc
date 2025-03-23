@@ -6,13 +6,13 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "teleprompter",
 	"main": "src/worker/index.ts",
-	"compatibility_date": "2025-02-24",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
+	"compatibility_date": "2025-03-23",
+	// "compatibility_flags": [
+	// 	"nodejs_compat"
+	// ],
 	"assets": {
 		"binding": "ASSETS",
-		"directory": "./public"
+		"directory": "./dist/assets/"
 	},
 	"observability": {
 		"enabled": true
