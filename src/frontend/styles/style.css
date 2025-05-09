@@ -3,52 +3,64 @@
 @import '@shoelace-style/shoelace/dist/themes/dark.css';
 
 html {
-	/* color: white; */
-	/* background-color: var(--background-color); */
-	/* font-family: "Fira Code", monospace; */
-	font-optical-sizing: auto;
-	font-size: var(--textScale);
+  /* color: white; */
+  /* background-color: var(--background-color); */
+  /* font-family: "Fira Code", monospace; */
+  font-optical-sizing: auto;
+  font-size: var(--textScale);
 }
 
-	@property --rotation {
-		syntax: "<angle>";
-		inherits: true;
-		initial-value: 0;
-
-	@property --textScale {
-		syntax: "number";
-		inherits: false;
-		initial-value: 0;
-	}
+@property --rotation {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0;
 }
+
+@property --textScale {
+  syntax: "number";
+  inherits: false;
+  initial-value: 0;
+}
+
 
 :root {
-	--sidebar-width: 300px;
-	--background-color: hsl(240, 5.9%, 11%);
-	--border-width: 1px;
-	--border-color: hsl(240, 5.9%, 11%);
+  --sidebar-width: 300px;
+  --background-color: hsl(240, 5.9%, 11%);
+  --border-width: 1px;
+  --border-color: hsl(240, 5.9%, 11%);
 }
 
 .square {
-	background-color: orange;
-	height: 50px;
-	width: 50px;
-	rotate: var(--rotation);
+  background-color: orange;
+  height: 50px;
+  width: 50px;
+  rotate: var(--rotation);
 }
 
 #controls {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: var(--sidebar-width);
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
 }
 
 #mainEditor {
-	margin-right: var(--sidebar-width);
+  margin-right: var(--sidebar-width);
 }
 
 /* TODO: move this to clock.css? Best way of web components css? */
 .negative {
   color: red;
+}
+
+.pop-clocks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8vi;
+  font-family: "Fira Code", monospace;
+
+  time[type="timer"] {
+    color: yellow;
+  }
 }
