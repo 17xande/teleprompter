@@ -3,12 +3,12 @@ import { SlButton, SlInput } from "@shoelace-style/shoelace"
  * Teleprompter countdown clock control component.
  */
 class TPClockControl extends HTMLElement {
-  inTimeCountdown: SlInput
-  btnStart: SlButton
-  btnStop: SlButton
-  btnReset: SlButton
-  countdown: TPClock
-  popCountdown: TPClock
+  inTimeCountdown: SlInput | null = null
+  btnStart: SlButton | null = null
+  btnStop: SlButton | null = null
+  btnReset: SlButton | null = null
+  countdown: TPClock | null = null
+  popCountdown: TPClock | null = null
 
   constructor() {
     // TODO: don't think I need this when extending HTMLElement.
@@ -45,22 +45,25 @@ class TPClockControl extends HTMLElement {
     this.countdown = <TPClock>this.querySelector('#timeCountdown')
 
     this.btnStart.addEventListener('click', e => {
-      this.countdown.start()
+      this.countdown?.start()
       if (this.popCountdown) {
         this.popCountdown.start()
       }
     })
 
     this.btnStop.addEventListener('click', e => {
-      this.countdown.stop()
+      this.countdown?.stop()
       if (this.popCountdown) {
         this.popCountdown.stop()
       }
     })
 
     this.btnReset.addEventListener('click', e => {
-      this.countdown.setAttribute('timer', this.inTimeCountdown.value)
-      this.countdown.reset()
+      if (this.inTimeCountdown == null) {
+        throw ("inTimeCountdown is null")
+      }
+      this.countdown?.setAttribute('timer', this.inTimeCountdown.value)
+      this.countdown?.reset()
       if (this.popCountdown) {
         this.popCountdown.setAttribute('timer', this.inTimeCountdown.value)
         this.popCountdown.reset()
@@ -86,10 +89,10 @@ class TPClock extends HTMLTimeElement {
   static observedAttributes = ['countdown']
 
   // TODO: should this be an enum?
-  type: string
-  interval: number
-  targetDate: Date
-  negative: boolean
+  type: string = "clock"
+  interval: number = -1
+  targetDate: Date = new Date()
+  negative: boolean = false
   constructor() {
     super()
   }
