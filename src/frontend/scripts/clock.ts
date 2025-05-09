@@ -1,6 +1,9 @@
 import { SlButton, SlInput } from "@shoelace-style/shoelace"
 /**
  * Teleprompter countdown clock control component.
+ *
+ * Usage:
+ * <tp-clock-control id="countdowncontrol" countdown="00:00:00"></tp-clock-control>
  */
 class TPClockControl extends HTMLElement {
   inTimeCountdown: SlInput | null = null
@@ -80,7 +83,7 @@ function registerClockControlComponent() {
   * Teleprompter Countdown clock component. Extends HTMLTimeElement.
   *
   * Usage:
-  * <time is="tp-clock" countdown="01:02:03"></time>
+  * <time is="tp-clock" type="clock" countdown="01:02:03"></time>
   * countdown="hh:mm:ss" to countdown from.
   */
 class TPClock extends HTMLTimeElement {

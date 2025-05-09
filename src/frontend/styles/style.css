@@ -5,7 +5,7 @@
 html {
 	/* color: white; */
 	/* background-color: var(--background-color); */
-	font-family: "Fira Code", monospace;
+	/* font-family: "Fira Code", monospace; */
 	font-optical-sizing: auto;
 	font-size: var(--textScale);
 }
