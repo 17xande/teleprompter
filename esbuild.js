@@ -26,7 +26,7 @@ const config = {
     copy({
       resolveFrom: 'cwd',
       assets: {
-        from: ['./node_modules/@shoelace-style/shoelace/dist/src/frontend/icons/*'],
+        from: ['./node_modules/@shoelace-style/shoelace/dist/assets/icons/*'],
         to: ['./public/frontend/icons'],
       }
     }),
