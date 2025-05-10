@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/17xande/teleprompter#readme",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250509.0",
+    "@cloudflare/workers-types": "^4.20250510.0",
     "esbuild": "^0.25.4",
     "esbuild-plugin-copy": "^2.1.1",
     "wrangler": "^4.14.4"
