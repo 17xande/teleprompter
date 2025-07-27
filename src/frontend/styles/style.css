@@ -59,6 +59,10 @@ html {
   justify-content: space-between;
   font-size: 8vi;
   font-family: "Fira Code", monospace;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: black;
 
   time[type="timer"] {
     color: yellow;
