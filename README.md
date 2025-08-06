@@ -2,7 +2,7 @@
 An open source teleprompter running in your browser. What a time to be alive.
 
 ### TODO:
-- [ ] Sticky clocks
+- [x] Sticky clocks
 - [ ] Text scale adjustment
 - [ ] Keep content when refreshing prompter
 - [ ] Prompter preview render
