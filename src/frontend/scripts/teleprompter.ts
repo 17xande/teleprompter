@@ -126,40 +126,22 @@ export class Teleprompter {
 
     if (!this.viewerWindow) return;
 
-    // TODO: don't use postMessage, declare the method on the window, and call it directly.
-
-    console.log(`posting message son`);
-    const msg: messageWindow = {
-      method: "scrollSpeed",
-      args: [speed],
-    };
-    this.viewerWindow.postMessage(msg);
+    this.viewerWindow.viewer.setSpeed(speed);
   }
 
   listenRange() {
-    const msg: messageWindow = {
-      method: "textScale",
-      args: [this.rngScale.value],
-    };
-
-    console.log(msg);
-
-    // TODO: don't use postMessage, declare the method on the window, and call it directly.
     if (!this.viewerWindow) return;
-    this.viewerWindow.postMessage(msg);
+    this.viewerWindow.viewer.setTextScale(this.rngScale.value);
   }
 
   updateMain() {
+    if (!this.viewerWindow) return;
     const editor = <HTMLDivElement> document.querySelector(
       "#editor > .ql-editor",
     );
     if (!editor) {
       return console.error("editor not found!");
     }
-
-    const popMain = <HTMLDivElement> this.viewerWindow.document.querySelector(
-      "#main",
-    );
-    popMain.innerHTML = editor.innerHTML;
+    this.viewerWindow.viewer.setContent(editor.innerHTML);
   }
 }
