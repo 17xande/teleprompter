@@ -1,6 +1,11 @@
 import { ToolbarConfig } from "quill/modules/toolbar";
 import Quill, { QuillOptions } from "quill";
 import SlRange from "@shoelace-style/shoelace/dist/components/range/range.js";
+import "@shoelace-style/shoelace/dist/components/drawer/drawer.js";
+import "@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js";
+import "@shoelace-style/shoelace/dist/components/range/range.js";
+import "@shoelace-style/shoelace/dist/components/input/input.js";
+import "@shoelace-style/shoelace/dist/components/button/button.js";
 import SlProgressBar from "@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js";
 import {
   registerClockComponent,
