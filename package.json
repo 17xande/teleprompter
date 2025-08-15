@@ -8,8 +8,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node ./esbuild.js",
     "build:watch": "node ./esbuild.js --watch",
-    "start": "caddy file-server -r public --browse --listen :2015",
-    "genCerts": "mkdir certs && openssl genrsa -out ./certs/server.key 2048 && openssl req -new -x509 -key ./certs/server.key -out ./certs/server.pem -days 365",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
