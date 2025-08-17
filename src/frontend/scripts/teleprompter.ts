@@ -57,11 +57,11 @@ export class Teleprompter {
     this.btnPop = <HTMLButtonElement> document.querySelector("#btnPop");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
-    this.btnPop.onclick = this.listenPop;
-    this.prgSpeed.addEventListener("wheel", this.listenWheel, {
+    this.btnPop.addEventListener("click", this.listenPop.bind(this));
+    this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
       passive: false,
     });
-    this.rngScale.addEventListener("sl-input", this.listenRange);
+    this.rngScale.addEventListener("sl-input", this.listenRange.bind(this));
 
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {

@@ -7,7 +7,6 @@ html {
   /* background-color: var(--background-color); */
   /* font-family: "Fira Code", monospace; */
   font-optical-sizing: auto;
-  font-size: var(--textScale);
 }
 
 @property --rotation {
@@ -21,7 +20,6 @@ html {
   inherits: false;
   initial-value: 0;
 }
-
 
 :root {
   --sidebar-width: 300px;
@@ -67,4 +65,8 @@ html {
   time[type="timer"] {
     color: yellow;
   }
+}
+
+.ql-container {
+  font-size: var(--textScale);
 }

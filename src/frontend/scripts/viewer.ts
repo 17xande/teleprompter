@@ -7,15 +7,22 @@ export class Viewer {
   root = <HTMLHtmlElement> document.querySelector(":root");
   constructor() {
     registerClockComponent();
+    this.root = <HTMLHtmlElement> document.querySelector(":root");
   }
 
   startSmoothScroll() {
     this.lastScrollTime = 0; // Reset last scroll time
     this.accumulatedScroll = 0; // Reset accumulated scroll
-    requestAnimationFrame(this.smoothScroll);
+    requestAnimationFrame(this.smoothScroll.bind(this));
   }
 
   smoothScroll(timestamp: DOMHighResTimeStamp) {
+    const windowHeight = globalThis.innerHeight + globalThis.scrollY;
+    if (this.scrollSpeed > 0 && windowHeight > document.body.offsetHeight) {
+      // if we're at the bottom of the page, don't continue scrolling.
+      requestAnimationFrame(this.smoothScroll.bind(this));
+      return;
+    }
     // Calculate the time difference since the last scroll
     if (this.lastScrollTime === 0) this.lastScrollTime = timestamp;
     const timeElapsed = timestamp - this.lastScrollTime;
@@ -30,22 +37,19 @@ export class Viewer {
 
     // Keep the fractional part for the next frame
     this.accumulatedScroll -= pixelsToScrollNow;
-
     this.lastScrollTime = timestamp;
 
-    // Continue scrolling as long as we have space to scroll
-    if (
-      (globalThis.innerHeight + globalThis.scrollY) < document.body.offsetHeight
-    ) {
-      requestAnimationFrame(this.smoothScroll);
-    }
+    // Continue the animation.
+    requestAnimationFrame(this.smoothScroll.bind(this));
   }
   setSpeed(speed: number) {
     this.scrollSpeed = speed; // Update speed in pixels per second
   }
+
   setTextScale(scale: number) {
     this.root.style.setProperty("--textScale", `${scale}rem`);
   }
+
   setContent(content: string) {
     const popMain = <HTMLDivElement> document.querySelector(
       "#main",
