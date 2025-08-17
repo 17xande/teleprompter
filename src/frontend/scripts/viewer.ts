@@ -1,22 +1,56 @@
 import { registerClockComponent } from "./clock.ts";
+import { TPClock, TPClockControl } from "./clock.ts";
 
 export class Viewer {
   lastScrollTime: number = 0;
   accumulatedScroll: number = 0;
   scrollSpeed: number = 0;
   root = <HTMLHtmlElement> document.querySelector(":root");
+  scroll = false;
+
   constructor() {
     registerClockComponent();
     this.root = <HTMLHtmlElement> document.querySelector(":root");
+
+    globalThis.addEventListener("load", () => {
+      globalThis.opener.teleprompter.updateMain();
+
+      const tpPopClock = <TPClock> document.querySelector(
+        "#timeTimer",
+      );
+      const tpClockControl = <TPClockControl> globalThis.opener.document
+        .querySelector(
+          "#countdowncontrol",
+        );
+      if (!tpPopClock) {
+        throw new Error("tp-clock not found on popup");
+      }
+
+      if (!tpClockControl) {
+        throw new Error("tp-clock-control not found on main");
+      }
+
+      tpClockControl.popCountdown = tpPopClock;
+
+      this.startSmoothScroll();
+    });
   }
 
   startSmoothScroll() {
     this.lastScrollTime = 0; // Reset last scroll time
     this.accumulatedScroll = 0; // Reset accumulated scroll
+    this.scroll = true;
     requestAnimationFrame(this.smoothScroll.bind(this));
   }
 
+  stopSmoothScroll() {
+    this.scroll = false;
+  }
+
   smoothScroll(timestamp: DOMHighResTimeStamp) {
+    if (!this.scroll) {
+      return;
+    }
     const windowHeight = globalThis.innerHeight + globalThis.scrollY;
     if (this.scrollSpeed > 0 && windowHeight > document.body.offsetHeight) {
       // if we're at the bottom of the page, don't continue scrolling.
