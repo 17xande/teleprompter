@@ -6,15 +6,15 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Text scale adjustment
 - [x] Keep pop content when refreshing pop
 - [x] Keep pop link when refreshing pop
+- [x] Keep prompter link when refreshing prompter (works by pressing Popup again)
+- [ ] Keep prompter display settings on next open
 - [ ] Continuous deployment
 - [ ] Remove /html from path
-- [ ] Keep prompter link when refreshing prompter
 - [ ] Automatically invert dark text on paste
 - [ ] Stop multiple clock cycles when multiple clock start button presses
 - [ ] Button to update pop content
 - [ ] Prompt message
 - [ ] Red negative clock
-- [ ] Keep prompter display settings on next open
 - [ ] Change scroll speed progress control to a vertical scale control
 - [ ] Add control page text scale component
 - [ ] Keyboard shortcuts

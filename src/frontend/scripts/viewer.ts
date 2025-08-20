@@ -7,11 +7,16 @@ export class Viewer {
   scrollSpeed: number = 0;
   root = <HTMLHtmlElement> document.querySelector(":root");
   scroll = false;
+  height = 0;
+  width = 0;
+  x = 0;
+  y = 0;
 
   constructor() {
     registerClockComponent();
     this.root = <HTMLHtmlElement> document.querySelector(":root");
 
+    // TODO: move this to own function.
     globalThis.addEventListener("load", () => {
       globalThis.opener.teleprompter.updateMain();
 
@@ -33,6 +38,13 @@ export class Viewer {
       tpClockControl.popCountdown = tpPopClock;
 
       this.startSmoothScroll();
+    });
+
+    globalThis.addEventListener("resize", () => {
+      this.height = globalThis.outerHeight;
+      this.width = globalThis.outerWidth;
+      this.x = globalThis.screenX;
+      this.y = globalThis.screenY;
     });
   }
 
