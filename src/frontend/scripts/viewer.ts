@@ -40,12 +40,14 @@ export class Viewer {
       this.startSmoothScroll();
     });
 
-    globalThis.addEventListener("resize", () => {
-      this.height = globalThis.outerHeight;
-      this.width = globalThis.outerWidth;
-      this.x = globalThis.screenX;
-      this.y = globalThis.screenY;
-    });
+    globalThis.addEventListener("resize", this.listenResize.bind(this))
+  }
+
+  listenResize() {
+    this.height = globalThis.outerHeight;
+    this.width = globalThis.outerWidth;
+    this.x = globalThis.screenX;
+    this.y = globalThis.screenY;
   }
 
   startSmoothScroll() {

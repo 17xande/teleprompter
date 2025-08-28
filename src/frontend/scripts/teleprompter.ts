@@ -14,6 +14,8 @@ import {
   TPClockControl,
 } from "./clock.ts";
 
+import { Viewer } from "./viewer.ts";
+
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
   ["blockquote", "code-block"],
@@ -48,10 +50,10 @@ export class Teleprompter {
   quill: Quill;
   prgSpeed: SlProgressBar;
   rngScale: SlRange;
-  viewerWindow: Window | null;
+  viewerWindow: Window | null = null;
+  viewer: Viewer | null = null;
 
   constructor() {
-    this.viewerWindow = null;
     registerClockComponent();
     registerClockControlComponent();
     this.btnPop = <HTMLButtonElement> document.querySelector("#btnPop");
@@ -76,6 +78,12 @@ export class Teleprompter {
   }
 
   listenPop() {
+    let width = 500;
+    let height = 600;
+    if (this.viewer?.width) {
+      width = this.viewer.width;
+      height = this.viewer.height;
+    }
     const win = globalThis.open(
       "pop.html",
       "pop",
