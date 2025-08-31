@@ -40,7 +40,7 @@ export class Viewer {
       this.startSmoothScroll();
     });
 
-    globalThis.addEventListener("resize", this.listenResize.bind(this))
+    globalThis.addEventListener("resize", this.listenResize.bind(this));
   }
 
   listenResize() {
@@ -99,10 +99,17 @@ export class Viewer {
   }
 
   setContent(content: string) {
+    // TODO: store this selector/element in the constructor
     const popMain = <HTMLDivElement> document.querySelector(
       "#main",
     );
     popMain.innerHTML = content;
+  }
+
+  setMessage(content: string) {
+    // TODO: store this selector/element in the constructor
+    const spanMessage = <HTMLSpanElement> document.querySelector("#message");
+    spanMessage.innerText = content;
   }
 }
 

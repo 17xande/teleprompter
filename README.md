@@ -7,13 +7,13 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Keep pop content when refreshing pop
 - [x] Keep pop link when refreshing pop
 - [x] Keep prompter link when refreshing prompter (works by pressing Popup again)
+- [ ] Prompt message
 - [ ] Keep prompter display settings on next open
-- [ ] Continuous deployment
+- [x] Continuous deployment
 - [ ] Stop multiple clock cycles when multiple clock start button presses
-- [ ] Remove /html from path
+- [x] Remove /html from path
 - [x] Button to update pop content
 - [ ] On update content, scroll to same location
-- [ ] Prompt message
 - [ ] Automatically invert dark text on paste
 - [ ] Red negative clock
 - [ ] Change scroll speed progress control to a vertical scale control

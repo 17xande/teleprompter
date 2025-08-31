@@ -10,11 +10,10 @@ import SlProgressBar from "@shoelace-style/shoelace/dist/components/progress-bar
 import {
   registerClockComponent,
   registerClockControlComponent,
-  TPClock,
-  TPClockControl,
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
+import { SlInput } from "@shoelace-style/shoelace/dist/shoelace.js";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -84,7 +83,7 @@ export class Teleprompter {
     const x = v?.x || 100;
     const y = v?.y || 100;
     const win = globalThis.open(
-      "pop.html",
+      "/html/pop.html",
       "pop",
       `popup=true,width=${width},height=${height},screenX=${x},screenY=${y}`,
     );
@@ -123,6 +122,17 @@ export class Teleprompter {
   listenRange() {
     if (!this.viewerWindow) return;
     this.viewerWindow.viewer.setTextScale(this.rngScale.value);
+  }
+
+  listenMessage() {
+    // TODO: make this check in the constructor or something? Otherwise I have to keep checking this.
+    if (!this.viewerWindow) return;
+    const txtMessage = <SlInput> document.querySelector("#txtMessage");
+    if (!txtMessage) {
+      throw new Error("No Message input found.");
+    }
+    console.log(txtMessage.value);
+    this.viewerWindow.viewer.setMessage(txtMessage.value);
   }
 
   updateMain() {
