@@ -78,16 +78,15 @@ export class Teleprompter {
   }
 
   listenPop() {
-    let width = 500;
-    let height = 600;
-    if (this.viewer?.width) {
-      width = this.viewer.width;
-      height = this.viewer.height;
-    }
+    const v = this.viewer;
+    const width = v?.width || 500;
+    const height = v?.height || 600;
+    const x = v?.x || 100;
+    const y = v?.y || 100;
     const win = globalThis.open(
       "pop.html",
       "pop",
-      "popup=true,width=300,height=320",
+      `popup=true,width=${width},height=${height},screenX=${x},screenY=${y}`,
     );
     if (!win) {
       throw new Error("can't open window");
