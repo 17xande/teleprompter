@@ -6,6 +6,9 @@ export class Viewer {
   accumulatedScroll: number = 0;
   scrollSpeed: number = 0;
   root = <HTMLHtmlElement> document.querySelector(":root");
+  spanMessage = <HTMLSpanElement> document.querySelector("#message");
+  messageMin = 10;
+  messageMax = 75;
   scroll = false;
   height = 0;
   width = 0;
@@ -48,6 +51,25 @@ export class Viewer {
     this.width = globalThis.outerWidth;
     this.x = globalThis.screenX;
     this.y = globalThis.screenY;
+    this.resizeMessage();
+  }
+
+  resizeMessage() {
+    // Rerset to min first so we measure full size.
+    let fontSize = this.messageMin;
+    this.spanMessage.style.fontSize = fontSize + "px";
+    const parentHeight = this.spanMessage.parentElement?.clientHeight ?? 0;
+    // Shrink until it fits or hits minSize
+    while (
+      this.spanMessage.clientHeight < parentHeight &&
+      fontSize < this.messageMax
+    ) {
+      fontSize += 1;
+      this.spanMessage.style.fontSize = fontSize + "px";
+    }
+
+    fontSize -= 1;
+    this.spanMessage.style.fontSize = fontSize + "px";
   }
 
   startSmoothScroll() {
@@ -90,6 +112,7 @@ export class Viewer {
     // Continue the animation.
     requestAnimationFrame(this.smoothScroll.bind(this));
   }
+
   setSpeed(speed: number) {
     this.scrollSpeed = speed; // Update speed in pixels per second
   }
@@ -110,6 +133,7 @@ export class Viewer {
     // TODO: store this selector/element in the constructor
     const spanMessage = <HTMLSpanElement> document.querySelector("#message");
     spanMessage.innerText = content;
+    this.resizeMessage();
   }
 }
 

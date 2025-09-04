@@ -55,12 +55,29 @@ html {
 .pop-clocks {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 8vi;
   font-family: "Fira Code", monospace;
   position: sticky;
   top: 0;
   z-index: 10;
   background: black;
+
+  .left,
+  .right {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .mid {
+    /* flex: 1 1 auto; */
+    text-align: center;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    color: red;
+  }
 
   time[type="timer"] {
     color: yellow;
