@@ -7,22 +7,22 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Keep pop content when refreshing pop
 - [x] Keep pop link when refreshing pop
 - [x] Keep prompter link when refreshing prompter (works by pressing Popup again)
-- [ ] Prompt message
-- [ ] Keep prompter display settings on next open
 - [x] Continuous deployment
-- [ ] Stop multiple clock cycles when multiple clock start button presses
 - [x] Remove /html from path
 - [x] Button to update pop content
+- [x] Add control page text scale component
+- [ ] Prompt message
+- [ ] Keep prompter display settings on next open
+- [ ] Stop multiple clock cycles when multiple clock start button presses
+- [ ] Space bar scroll start/stop
 - [ ] On update content, scroll to same location
-- [ ] Automatically invert dark text on paste
 - [ ] Red negative clock
 - [ ] Change scroll speed progress control to a vertical scale control
-- [ ] Add control page text scale component
-- [ ] Keyboard shortcuts
-- [ ] Space bar scroll start/stop
-- [ ] Prompter preview render
 
 ### Future
+- [ ] Automatically invert dark text on paste
+- [ ] Keyboard shortcuts
+- [ ] Prompter preview render
 - [ ] Rename project to "Prompter"?
 - [ ] Prompter themes/layouts (CSS based)
 - [ ] User accounts 

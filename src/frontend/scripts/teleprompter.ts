@@ -13,7 +13,7 @@ import {
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
-import { SlInput } from "@shoelace-style/shoelace/dist/shoelace.js";
+import { SlButton, SlInput } from "@shoelace-style/shoelace/dist/shoelace.js";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -45,7 +45,8 @@ const options: QuillOptions = {
 };
 
 export class Teleprompter {
-  btnPop: HTMLButtonElement;
+  btnPop: SlButton;
+  btnMessage: SlButton;
   quill: Quill;
   prgSpeed: SlProgressBar;
   rngScale: SlRange;
@@ -55,10 +56,12 @@ export class Teleprompter {
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
-    this.btnPop = <HTMLButtonElement> document.querySelector("#btnPop");
+    this.btnPop = <SlButton> document.querySelector("#btnPop");
+    this.btnMessage = <SlButton> document.querySelector("#btnMessage");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
+    this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
       passive: false,
     });
