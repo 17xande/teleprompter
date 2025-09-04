@@ -11,7 +11,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Remove /html from path
 - [x] Button to update pop content
 - [x] Add control page text scale component
-- [ ] Prompt message
+- [x] Prompt message
 - [ ] Keep prompter display settings on next open
 - [ ] Stop multiple clock cycles when multiple clock start button presses
 - [ ] Space bar scroll start/stop
