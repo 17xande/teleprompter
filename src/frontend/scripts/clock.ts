@@ -160,7 +160,7 @@ class TPClock extends HTMLTimeElement {
     this.targetDate.setHours(parseInt(hours, 10));
     this.targetDate.setMinutes(parseInt(minutes, 10));
     this.targetDate.setSeconds(parseInt(seconds, 10));
-    this.textContent = this.targetDate.toLocaleTimeString();
+    this.textContent = this.targetDate.toLocaleTimeString("en-ZA", dateOptions);
     this.negative = false;
     this.classList.remove("negative");
   }
