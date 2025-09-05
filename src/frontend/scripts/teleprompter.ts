@@ -64,6 +64,7 @@ export class Teleprompter {
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
+    window.addEventListener("keyup");
     this.btnPop = <SlButton> document.querySelector("#btnPop");
     this.btnMessage = <SlButton> document.querySelector("#btnMessage");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
@@ -129,6 +130,9 @@ export class Teleprompter {
     if (!this.viewerWindow) return;
 
     this.viewerWindow.viewer.setSpeed(speed);
+  }
+
+  listenKey() {
   }
 
   listenRange() {
