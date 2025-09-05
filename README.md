@@ -13,7 +13,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Add control page text scale component
 - [x] Prompt message
 - [x] Keep prompter display settings on next open
-- [ ] Stop multiple clock cycles when multiple clock start button presses
+- [x] Stop multiple clock cycles when multiple clock start button presses
 - [ ] Space bar scroll start/stop
 - [ ] On update content, scroll to same location
 - [ ] Red negative clock

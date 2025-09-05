@@ -136,6 +136,8 @@ class TPClock extends HTMLTimeElement {
   }
 
   start() {
+    if (this.interval !== -1) return;
+    this.tick();
     this.interval = setInterval(() => {
       this.tick();
     }, 1000);
@@ -143,6 +145,7 @@ class TPClock extends HTMLTimeElement {
 
   stop() {
     clearInterval(this.interval);
+    this.interval = -1;
   }
 
   reset() {
