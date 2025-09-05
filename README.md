@@ -12,7 +12,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Button to update pop content
 - [x] Add control page text scale component
 - [x] Prompt message
-- [ ] Keep prompter display settings on next open
+- [x] Keep prompter display settings on next open
 - [ ] Stop multiple clock cycles when multiple clock start button presses
 - [ ] Space bar scroll start/stop
 - [ ] On update content, scroll to same location
@@ -20,6 +20,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [ ] Change scroll speed progress control to a vertical scale control
 
 ### Future
+- [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Automatically invert dark text on paste
 - [ ] Keyboard shortcuts
 - [ ] Prompter preview render

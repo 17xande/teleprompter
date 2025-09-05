@@ -1,7 +1,9 @@
 import { registerClockComponent } from "./clock.ts";
 import { TPClock, TPClockControl } from "./clock.ts";
+import { Teleprompter } from "./teleprompter.ts";
 
 export class Viewer {
+  controller: Teleprompter | null = null;
   lastScrollTime: number = 0;
   accumulatedScroll: number = 0;
   scrollSpeed: number = 0;
@@ -21,7 +23,8 @@ export class Viewer {
 
     // TODO: move this to own function.
     globalThis.addEventListener("load", () => {
-      globalThis.opener.teleprompter.updateMain();
+      this.controller = globalThis.opener.teleprompter;
+      this.controller?.updateMain();
 
       const tpPopClock = <TPClock> document.querySelector(
         "#timeTimer",
@@ -47,11 +50,20 @@ export class Viewer {
   }
 
   listenResize() {
+    this.saveDimensions();
+    this.resizeMessage();
+  }
+
+  saveDimensions() {
     this.height = globalThis.outerHeight;
     this.width = globalThis.outerWidth;
     this.x = globalThis.screenX;
     this.y = globalThis.screenY;
-    this.resizeMessage();
+    if (!this.controller) return;
+    this.controller.popDimensions.height = this.height;
+    this.controller.popDimensions.width = this.width;
+    this.controller.popDimensions.x = this.x;
+    this.controller.popDimensions.y = this.y;
   }
 
   resizeMessage() {

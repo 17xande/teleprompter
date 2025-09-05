@@ -44,6 +44,13 @@ const options: QuillOptions = {
   },
 };
 
+type PopupDimensions = {
+  width: number;
+  height: number;
+  x: number;
+  y: number;
+};
+
 export class Teleprompter {
   btnPop: SlButton;
   btnMessage: SlButton;
@@ -52,6 +59,7 @@ export class Teleprompter {
   rngScale: SlRange;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
+  popDimensions: PopupDimensions;
 
   constructor() {
     registerClockComponent();
@@ -66,6 +74,12 @@ export class Teleprompter {
       passive: false,
     });
     this.rngScale.addEventListener("sl-input", this.listenRange.bind(this));
+    this.popDimensions = {
+      width: 200,
+      height: 150,
+      x: 100,
+      y: 100,
+    };
 
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
@@ -80,15 +94,10 @@ export class Teleprompter {
   }
 
   listenPop() {
-    const v = this.viewer;
-    const width = v?.width || 500;
-    const height = v?.height || 600;
-    const x = v?.x || 100;
-    const y = v?.y || 100;
     const win = globalThis.open(
       "/html/pop.html",
       "pop",
-      `popup=true,width=${width},height=${height},screenX=${x},screenY=${y}`,
+      `popup=true,width=${this.popDimensions.width},height=${this.popDimensions.height},screenX=${this.popDimensions.x},screenY=${this.popDimensions.y}`,
     );
     if (!win) {
       throw new Error("can't open window");
