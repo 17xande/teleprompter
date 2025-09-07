@@ -16,11 +16,12 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Stop multiple clock cycles when multiple clock start button presses
 - [x] Space bar scroll start/stop
 - [x] On update content, scroll to same location
-- [ ] Red negative clock
+- [x] Red negative clock
 - [ ] Change scroll speed progress control to a vertical scale control
 
 ### Future
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)
+- [ ] Keep clocks running when refreshing popup.
 - [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Automatically invert dark text on paste
 - [ ] Keyboard shortcuts
