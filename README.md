@@ -15,7 +15,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Keep prompter display settings on next open
 - [x] Stop multiple clock cycles when multiple clock start button presses
 - [x] Space bar scroll start/stop
-- [ ] On update content, scroll to same location
+- [x] On update content, scroll to same location
 - [ ] Red negative clock
 - [ ] Change scroll speed progress control to a vertical scale control
 

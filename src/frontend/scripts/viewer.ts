@@ -12,6 +12,7 @@ export class Viewer {
   messageMin = 10;
   messageMax = 75;
   scroll = false;
+  scrollY = 0;
   height = 0;
   width = 0;
   x = 0;
@@ -42,16 +43,27 @@ export class Viewer {
       }
 
       tpClockControl.popCountdown = tpPopClock;
+      if (this.controller) {
+        globalThis.scroll(0, this.controller.viewerScrollY);
+      }
 
       this.startSmoothScroll();
     });
 
+    globalThis.addEventListener("scroll", this.listenScroll.bind(this));
     globalThis.addEventListener("resize", this.listenResize.bind(this));
   }
 
   listenResize() {
     this.saveDimensions();
     this.resizeMessage();
+  }
+
+  listenScroll() {
+    this.scrollY = globalThis.scrollY;
+    if (this.controller) {
+      this.controller.viewerScrollY = globalThis.scrollY;
+    }
   }
 
   saveDimensions() {

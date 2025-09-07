@@ -59,6 +59,7 @@ export class Teleprompter {
   rngScale: SlRange;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
+  viewerScrollY = 0;
   popDimensions: PopupDimensions;
   controls: HTMLDivElement;
 
