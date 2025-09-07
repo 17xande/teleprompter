@@ -60,15 +60,16 @@ export class Teleprompter {
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   popDimensions: PopupDimensions;
+  controls: HTMLDivElement;
 
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
-    window.addEventListener("keyup");
     this.btnPop = <SlButton> document.querySelector("#btnPop");
     this.btnMessage = <SlButton> document.querySelector("#btnMessage");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
+    this.controls = <HTMLDivElement> document.querySelector("#controls");
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
@@ -87,6 +88,8 @@ export class Teleprompter {
       const content = this.quill.getContents();
       localStorage.setItem("quill-content", JSON.stringify(content));
     });
+
+    globalThis.addEventListener("keyup", this.listenKey.bind(this));
 
     const storedContent = localStorage.getItem("quill-content");
     if (storedContent) {
@@ -132,7 +135,21 @@ export class Teleprompter {
     this.viewerWindow.viewer.setSpeed(speed);
   }
 
-  listenKey() {
+  listenKey(ke: KeyboardEvent) {
+    if (this.quill.hasFocus()) return;
+
+    switch (ke.code) {
+      case "Space":
+        ke.preventDefault();
+        if (this.viewer?.scroll) {
+          this.viewer?.stopSmoothScroll();
+        } else {
+          this.viewer?.startSmoothScroll();
+        }
+        break;
+      default:
+        // ignore for now
+    }
   }
 
   listenRange() {
@@ -159,6 +176,7 @@ export class Teleprompter {
     if (!editor) {
       return console.error("editor not found!");
     }
-    this.viewerWindow.viewer.setContent(editor.innerHTML);
+    this.viewer = this.viewerWindow.viewer;
+    this.viewer.setContent(editor.innerHTML);
   }
 }

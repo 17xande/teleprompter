@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "esnext", "dom.iterable", "deno.ns"]
+    "lib": ["dom", "esnext", "dom.iterable", "deno.ns"],
+    "types": [
+      "src/frontend/scripts/global.d.ts"
+    ]
   },
   "exclude": [
     "public/"
