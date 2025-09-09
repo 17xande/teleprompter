@@ -56,6 +56,7 @@ export class Teleprompter {
   btnMessage: SlButton;
   quill: Quill;
   prgSpeed: SlProgressBar;
+  rngSpeed: SlRange;
   rngScale: SlRange;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
@@ -69,6 +70,7 @@ export class Teleprompter {
     this.btnPop = <SlButton> document.querySelector("#btnPop");
     this.btnMessage = <SlButton> document.querySelector("#btnMessage");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
+    this.rngSpeed = <SlRange> document.querySelector("#rngSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
     this.controls = <HTMLDivElement> document.querySelector("#controls");
     this.btnPop.addEventListener("click", this.listenPop.bind(this));

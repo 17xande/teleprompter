@@ -35,7 +35,11 @@ class TPClockControl extends HTMLElement {
     throw new Error("not implemented");
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(
+    _name: string,
+    _oldValue: string,
+    _newValue: string,
+  ) {
     throw new Error("not implemented");
   }
 
@@ -46,21 +50,21 @@ class TPClockControl extends HTMLElement {
     this.btnReset = <SlButton> this.querySelector("#btnCountdownReset");
     this.countdown = <TPClock> this.querySelector("#timeCountdown");
 
-    this.btnStart.addEventListener("click", (e) => {
+    this.btnStart.addEventListener("click", () => {
       this.countdown?.start();
       if (this.popCountdown) {
         this.popCountdown.start();
       }
     });
 
-    this.btnStop.addEventListener("click", (e) => {
+    this.btnStop.addEventListener("click", () => {
       this.countdown?.stop();
       if (this.popCountdown) {
         this.popCountdown.stop();
       }
     });
 
-    this.btnReset.addEventListener("click", (e) => {
+    this.btnReset.addEventListener("click", () => {
       if (this.inTimeCountdown == null) {
         throw ("inTimeCountdown is null");
       }
@@ -200,7 +204,7 @@ class TPClock extends HTMLTimeElement {
     throw new Error("Not implemented");
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, _oldValue: string, _newValue: string) {
     if (this.type === "countdown" && name === "countdown") {
       this.parseTimer();
     }

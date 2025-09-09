@@ -18,6 +18,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] On update content, scroll to same location
 - [x] Red negative clock
 - [ ] Change scroll speed progress control to a vertical scale control
+- [ ] Omit hours counter from countdown clock
 
 ### Future
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)

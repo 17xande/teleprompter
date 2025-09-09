@@ -9,6 +9,10 @@ html {
   font-optical-sizing: auto;
 }
 
+body {
+  font-family: var(--sl-font-mono);
+}
+
 @property --rotation {
   syntax: "<angle>";
   inherits: true;
@@ -47,13 +51,11 @@ html {
   margin-right: var(--sidebar-width);
 }
 
-
 .pop-clocks {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 8vi;
-  font-family: "Fira Code", monospace;
   position: sticky;
   top: 0;
   z-index: 10;
