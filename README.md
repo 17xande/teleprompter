@@ -17,6 +17,7 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Space bar scroll start/stop
 - [x] On update content, scroll to same location
 - [x] Red negative clock
+- [ ] Store and retrieve multiple documents
 - [ ] Change scroll speed progress control to a vertical scale control
 - [ ] Omit hours counter from countdown clock
 

@@ -10,7 +10,23 @@
 </head>
 
 <body>
+  <main id="mainEditor">
+    <div id="toolbar"></div>
+    <div id="editor">
+    </div>
+  </main>
   <aside id="controls">
+    <sl-dropdown id="drpDocuments" stay-open-on-select="true">
+      <sl-button slot="trigger" caret>Documents</sl-button>
+      <sl-menu id="mnuDocuments">
+        <sl-menu-item></sl-menu-item>
+        <sl-divider></sl-divider>
+        <sl-menu-item id="mniNew">
+          <sl-input placeholder="New document" clearable></sl-input>
+          <sl-icon-button slot="suffix" name="check" label="Delete"></sl-icon-button>
+        </sl-menu-item>
+      </sl-menu>
+    </sl-dropdown>
     <sl-button id="btnPop">Popup</sl-button>
     <sl-progress-bar id="prgSpeed" value="50" class="progress-bar-values">0pps</sl-progress-bar>
     <sl-range id="rngSpeed" label="Speed" help-text="Controls the scroll speed" min="-500" , max="500" , step="1"
@@ -26,11 +42,6 @@
       Send Message
     </sl-button>
   </aside>
-  <main id="mainEditor">
-    <div id="toolbar"></div>
-    <div id="editor">
-    </div>
-  </main>
 </body>
 
 </html>

@@ -2,6 +2,13 @@
 @import 'quill/dist/quill.snow.css';
 @import '@shoelace-style/shoelace/dist/themes/dark.css';
 
+:root {
+  --sidebar-width: 300px;
+  --background-color: hsl(240, 5.9%, 11%);
+  --border-width: 1px;
+  --border-color: hsl(240, 5.9%, 11%);
+}
+
 html {
   /* color: white; */
   /* background-color: var(--background-color); */
@@ -11,6 +18,9 @@ html {
 
 body {
   font-family: var(--sl-font-mono);
+  display: grid;
+  grid-template-columns: 1fr var(--sidebar-width);
+  height: 98vh;
 }
 
 @property --rotation {
@@ -25,13 +35,6 @@ body {
   initial-value: 0;
 }
 
-:root {
-  --sidebar-width: 300px;
-  --background-color: hsl(240, 5.9%, 11%);
-  --border-width: 1px;
-  --border-color: hsl(240, 5.9%, 11%);
-}
-
 .square {
   background-color: orange;
   height: 50px;
@@ -40,15 +43,12 @@ body {
 }
 
 #controls {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: var(--sidebar-width);
+  position: sticky;
+  height: 98vh;
 }
 
 #mainEditor {
-  margin-right: var(--sidebar-width);
+  height: 92vh;
 }
 
 .pop-clocks {

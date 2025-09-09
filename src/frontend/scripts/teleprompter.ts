@@ -1,19 +1,29 @@
 import { ToolbarConfig } from "quill/modules/toolbar";
 import Quill, { QuillOptions } from "quill";
-import SlRange from "@shoelace-style/shoelace/dist/components/range/range.js";
 import "@shoelace-style/shoelace/dist/components/drawer/drawer.js";
 import "@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js";
 import "@shoelace-style/shoelace/dist/components/range/range.js";
 import "@shoelace-style/shoelace/dist/components/input/input.js";
 import "@shoelace-style/shoelace/dist/components/button/button.js";
-import SlProgressBar from "@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js";
+import "@shoelace-style/shoelace/dist/components/dropdown/dropdown.js";
+import "@shoelace-style/shoelace/dist/components/menu/menu.js";
+import "@shoelace-style/shoelace/dist/components/menu-item/menu-item.js";
+import "@shoelace-style/shoelace/dist/components/divider/divider.js";
+import "@shoelace-style/shoelace/dist/components/icon-button/icon-button.js";
 import {
   registerClockComponent,
   registerClockControlComponent,
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
-import { SlButton, SlInput } from "@shoelace-style/shoelace/dist/shoelace.js";
+import {
+  SlButton,
+  SlDropdown,
+  SlInput,
+  SlMenu,
+  SlProgressBar,
+  SlRange,
+} from "@shoelace-style/shoelace/dist/shoelace.js";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -51,6 +61,10 @@ type PopupDimensions = {
   y: number;
 };
 
+interface DynamicObject {
+  [key: string]: string;
+}
+
 export class Teleprompter {
   btnPop: SlButton;
   btnMessage: SlButton;
@@ -58,11 +72,15 @@ export class Teleprompter {
   prgSpeed: SlProgressBar;
   rngSpeed: SlRange;
   rngScale: SlRange;
+  drpDocuments: SlDropdown;
+  mnuDocuments: SlMenu;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   viewerScrollY = 0;
   popDimensions: PopupDimensions;
   controls: HTMLDivElement;
+  currentDocument: string;
+  documents: DynamicObject;
 
   constructor() {
     registerClockComponent();
@@ -73,6 +91,8 @@ export class Teleprompter {
     this.rngSpeed = <SlRange> document.querySelector("#rngSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
     this.controls = <HTMLDivElement> document.querySelector("#controls");
+    this.drpDocuments = <SlDropdown> document.querySelector("#drpDocuments");
+    this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
@@ -89,15 +109,30 @@ export class Teleprompter {
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
       const content = this.quill.getContents();
-      localStorage.setItem("quill-content", JSON.stringify(content));
+      this.documents[this.currentDocument] = JSON.stringify(content);
+      localStorage.setItem("currentDocument", this.currentDocument);
+      localStorage.setItem("documents", JSON.stringify(this.documents));
     });
 
-    globalThis.addEventListener("keyup", this.listenKey.bind(this));
-
-    const storedContent = localStorage.getItem("quill-content");
-    if (storedContent) {
-      this.quill.setContents(JSON.parse(storedContent));
+    this.currentDocument = localStorage.getItem("currentDocument") ||
+      "document";
+    this.documents = {};
+    const docs = localStorage.getItem("documents");
+    if (docs) {
+      this.documents = <DynamicObject> JSON.parse(docs);
+      for (const name in Object.keys(this.documents)) {
+        this.addMenuItem(name);
+      }
     }
+
+    if (this.currentDocument && this.documents[this.currentDocument]) {
+      const strDoc = this.documents[this.currentDocument];
+      const parsedDoc = JSON.parse(strDoc);
+      if (parsedDoc) {
+        this.quill.setContents(parsedDoc);
+      }
+    }
+    globalThis.addEventListener("keyup", this.listenKey.bind(this));
   }
 
   listenPop() {
@@ -111,6 +146,17 @@ export class Teleprompter {
     }
 
     this.viewerWindow = win;
+  }
+
+  listenNewDoc() {
+  }
+
+  addMenuItem(docName: string) {
+    const template = `${docName}
+      <sl-icon-button slot="suffix" name="trash" label="Delete"></sl-icon-button>`;
+    const mnuItem = document.createElement("sl-menu-item");
+    mnuItem.innerHTML = template;
+    this.mnuDocuments.prepend(mnuItem.cloneNode(true));
   }
 
   listenWheel(e: WheelEvent) {
