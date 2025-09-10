@@ -23,6 +23,7 @@ import {
   SlMenu,
   SlProgressBar,
   SlRange,
+  SlSelectEvent,
 } from "@shoelace-style/shoelace/dist/shoelace.js";
 
 const toolbarOptions: ToolbarConfig = [
@@ -105,6 +106,7 @@ export class Teleprompter {
       x: 100,
       y: 100,
     };
+    this.drpDocuments.addEventListener("sl-select", this.listenDrop.bind(this));
 
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
@@ -120,7 +122,7 @@ export class Teleprompter {
     const docs = localStorage.getItem("documents");
     if (docs) {
       this.documents = <DynamicObject> JSON.parse(docs);
-      for (const name in Object.keys(this.documents)) {
+      for (const name of Object.keys(this.documents)) {
         this.addMenuItem(name);
       }
     }
@@ -148,13 +150,17 @@ export class Teleprompter {
     this.viewerWindow = win;
   }
 
-  listenNewDoc() {
+  listenDrop(e: SlSelectEvent) {
+    console.log(e);
   }
 
   addMenuItem(docName: string) {
     const template = `${docName}
-      <sl-icon-button slot="suffix" name="trash" label="Delete"></sl-icon-button>`;
+      <sl-icon-button slot="suffix" name="pencil" label="Edit"></sl-icon-button>
+      <sl-icon-button slot="suffix" name="trash" label="Delete"></sl-icon-button>
+`;
     const mnuItem = document.createElement("sl-menu-item");
+    mnuItem.value = docName;
     mnuItem.innerHTML = template;
     this.mnuDocuments.prepend(mnuItem.cloneNode(true));
   }
