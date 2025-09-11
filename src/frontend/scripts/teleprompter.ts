@@ -70,6 +70,7 @@ interface DynamicObject {
 }
 
 export class Teleprompter {
+  btnNew: SlButton;
   btnPop: SlButton;
   btnMessage: SlButton;
   quill: Quill;
@@ -93,6 +94,7 @@ export class Teleprompter {
     registerClockControlComponent();
     this.btnPop = <SlButton> document.querySelector("#btnPop");
     this.btnMessage = <SlButton> document.querySelector("#btnMessage");
+    this.btnNew = <SlButton> document.querySelector("#btnNew");
     this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
     this.rngSpeed = <SlRange> document.querySelector("#rngSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
@@ -100,6 +102,7 @@ export class Teleprompter {
     this.drpDocuments = <SlDropdown> document.querySelector("#drpDocuments");
     this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
     this.saveDialog = <SlDialog> document.querySelector("#dlgRename");
+    this.btnNew.addEventListener("click", this.newDocument.bind(this));
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
@@ -308,6 +311,14 @@ export class Teleprompter {
     this.viewerWindow.viewer.setTextScale(this.rngScale.value);
   }
 
+  newDocument() {
+    this.saveDB();
+    const newName = `document_${this.formatDateTime()}`;
+    this.currentDocument = newName;
+    this.addMenuItem(newName);
+    this.quill.setText("");
+  }
+
   listenMessage() {
     // TODO: make this check in the constructor or something? Otherwise I have to keep checking this.
     if (!this.viewerWindow) return;
@@ -329,5 +340,16 @@ export class Teleprompter {
     }
     this.viewer = this.viewerWindow.viewer;
     this.viewer.setContent(editor.innerHTML);
+  }
+
+  formatDateTime(d: Date = new Date()): string {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+
+    return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
   }
 }
