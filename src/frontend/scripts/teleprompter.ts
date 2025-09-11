@@ -18,9 +18,12 @@ import {
 import { Viewer } from "./viewer.ts";
 import {
   SlButton,
+  SlDialog,
   SlDropdown,
+  SlIconButton,
   SlInput,
   SlMenu,
+  SlMenuItem,
   SlProgressBar,
   SlRange,
   SlSelectEvent,
@@ -75,6 +78,7 @@ export class Teleprompter {
   rngScale: SlRange;
   drpDocuments: SlDropdown;
   mnuDocuments: SlMenu;
+  saveDialog: SlDialog;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   viewerScrollY = 0;
@@ -82,6 +86,7 @@ export class Teleprompter {
   controls: HTMLDivElement;
   currentDocument: string;
   documents: DynamicObject;
+  editingName: string;
 
   constructor() {
     registerClockComponent();
@@ -94,26 +99,47 @@ export class Teleprompter {
     this.controls = <HTMLDivElement> document.querySelector("#controls");
     this.drpDocuments = <SlDropdown> document.querySelector("#drpDocuments");
     this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
+    this.saveDialog = <SlDialog> document.querySelector("#dlgRename");
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
       passive: false,
     });
     this.rngScale.addEventListener("sl-input", this.listenRange.bind(this));
+    this.editingName = "";
     this.popDimensions = {
       width: 200,
       height: 150,
       x: 100,
       y: 100,
     };
-    this.drpDocuments.addEventListener("sl-select", this.listenDrop.bind(this));
+    this.drpDocuments.addEventListener(
+      "sl-select",
+      this.listenDropSelect.bind(this),
+    );
+    this.drpDocuments.addEventListener(
+      "click",
+      this.listenDropClick.bind(this),
+    );
 
+    const btnSave = <SlButton> this.saveDialog.querySelector(
+      "sl-button[name=save]",
+    );
+    const btnCancel = <SlButton> this.saveDialog.querySelector(
+      "sl-button[name=cancel]",
+    );
+    btnCancel.addEventListener("click", () => this.saveDialog.hide());
+    btnSave.addEventListener("click", () => {
+      const input = <SlInput> this.saveDialog.querySelector("sl-input");
+      const hidden = <HTMLInputElement> this.saveDialog.querySelector(
+        "input",
+      );
+      this.nameSave(hidden.value, input.value);
+      this.saveDialog.hide();
+    });
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
-      const content = this.quill.getContents();
-      this.documents[this.currentDocument] = JSON.stringify(content);
-      localStorage.setItem("currentDocument", this.currentDocument);
-      localStorage.setItem("documents", JSON.stringify(this.documents));
+      this.saveDB();
     });
 
     this.currentDocument = localStorage.getItem("currentDocument") ||
@@ -150,19 +176,89 @@ export class Teleprompter {
     this.viewerWindow = win;
   }
 
-  listenDrop(e: SlSelectEvent) {
+  listenDropClick(e: PointerEvent) {
+    if (!(e.target instanceof SlMenuItem)) {
+      const icon = <SlIconButton> e.target;
+      const menuItem = <SlMenuItem> icon.closest("sl-menu-item");
+      switch (icon.name) {
+        case "pencil":
+          this.nameEdit(menuItem);
+          break;
+        case "trash":
+          this.nameDelete(menuItem.value);
+          menuItem.remove();
+          break;
+          // case "check":
+          //   this.nameSave(menuItem);
+          //   break;
+          // case "x":
+          //   this.nameEditCancel(menuItem);
+          //   break;
+      }
+      return;
+    }
+    if (e.target.parentElement?.contentEditable) return;
+    this.drpDocuments.hide();
+  }
+
+  nameEdit(mi: SlMenuItem) {
+    // make a popup
+    this.saveDialog.show();
+    const input = <SlInput> this.saveDialog.querySelector("sl-input");
+    const hidden = <HTMLInputElement> this.saveDialog.querySelector("input");
+    hidden.value = mi.value;
+    input.value = mi.value;
+    input.select();
+  }
+
+  nameSave(previousName: string, newName: string) {
+    const doc = this.documents[previousName];
+    this.nameDelete(previousName);
+    this.documents[newName] = doc;
+    if (this.currentDocument === previousName) {
+      this.currentDocument = newName;
+    }
+    const items = Array.from(
+      this.drpDocuments.querySelectorAll("sl-menu-item"),
+    );
+    const mi = items.find((e) => e.value === previousName);
+    if (!mi) {
+      throw new Error("menu item does not exist");
+    }
+    mi.remove();
+    this.addMenuItem(newName);
+    this.saveDB();
+  }
+
+  saveDB() {
+    const content = this.quill.getContents();
+    this.documents[this.currentDocument] = JSON.stringify(content);
+    localStorage.setItem("currentDocument", this.currentDocument);
+    localStorage.setItem("documents", JSON.stringify(this.documents));
+  }
+
+  nameDelete(docName: string) {
+    const doc = this.documents[docName];
+    if (!doc) {
+      throw new Error(`Document ${docName} doesn't exist`);
+    }
+    delete (this.documents[docName]);
+  }
+
+  listenDropSelect(e: SlSelectEvent) {
     console.log(e);
   }
 
   addMenuItem(docName: string) {
-    const template = `${docName}
+    const mnuItem = new SlMenuItem();
+
+    mnuItem.innerHTML = `${docName}
       <sl-icon-button slot="suffix" name="pencil" label="Edit"></sl-icon-button>
       <sl-icon-button slot="suffix" name="trash" label="Delete"></sl-icon-button>
-`;
-    const mnuItem = document.createElement("sl-menu-item");
-    mnuItem.value = docName;
-    mnuItem.innerHTML = template;
-    this.mnuDocuments.prepend(mnuItem.cloneNode(true));
+    `;
+    const m = <SlMenuItem> mnuItem.cloneNode(true);
+    m.value = docName;
+    this.mnuDocuments.appendChild(m);
   }
 
   listenWheel(e: WheelEvent) {

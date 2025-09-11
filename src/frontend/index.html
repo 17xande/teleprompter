@@ -20,11 +20,6 @@
     <sl-dropdown id="drpDocuments">
       <sl-button slot="trigger" caret>Documents</sl-button>
       <sl-menu id="mnuDocuments">
-        <sl-divider></sl-divider>
-        <sl-menu-item id="mniNew">
-          <sl-input placeholder="New document" clearable></sl-input>
-          <sl-icon-button slot="suffix" name="check" label="Delete"></sl-icon-button>
-        </sl-menu-item>
       </sl-menu>
     </sl-dropdown>
     <sl-button id="btnPop">Popup</sl-button>
@@ -42,6 +37,12 @@
       Send Message
     </sl-button>
   </aside>
+    <sl-dialog id="dlgRename" label="Rename Document" class="dialog-focus">
+      <sl-input autofocus></sl-input>
+      <input type="hidden"></input>
+      <sl-button name="save" slot="footer" variant="primary">Save</sl-button>
+      <sl-button name="cancel" slot="footer">Cancel</sl-button>
+    </sl-dialog>
 </body>
 
 </html>
