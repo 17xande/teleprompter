@@ -142,6 +142,7 @@ export class Teleprompter {
     });
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
+      this.saveDocument;
       this.saveDB();
     });
 
@@ -156,14 +157,21 @@ export class Teleprompter {
       }
     }
 
-    if (this.currentDocument && this.documents[this.currentDocument]) {
-      const strDoc = this.documents[this.currentDocument];
+    this.loadDocument(this.currentDocument);
+
+    globalThis.addEventListener("keyup", this.listenKey.bind(this));
+  }
+
+  loadDocument(docName: string) {
+    if (this.documents[docName]) {
+      const strDoc = this.documents[docName];
       const parsedDoc = JSON.parse(strDoc);
       if (parsedDoc) {
+        this.saveDocument();
         this.quill.setContents(parsedDoc);
+        this.currentDocument = docName;
       }
     }
-    globalThis.addEventListener("keyup", this.listenKey.bind(this));
   }
 
   listenPop() {
@@ -233,9 +241,12 @@ export class Teleprompter {
     this.saveDB();
   }
 
-  saveDB() {
+  saveDocument() {
     const content = this.quill.getContents();
     this.documents[this.currentDocument] = JSON.stringify(content);
+  }
+
+  saveDB() {
     localStorage.setItem("currentDocument", this.currentDocument);
     localStorage.setItem("documents", JSON.stringify(this.documents));
   }
@@ -249,7 +260,8 @@ export class Teleprompter {
   }
 
   listenDropSelect(e: SlSelectEvent) {
-    console.log(e);
+    const selected = e.detail.item.value;
+    this.loadDocument(selected);
   }
 
   addMenuItem(docName: string) {
