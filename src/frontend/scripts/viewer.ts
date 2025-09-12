@@ -1,3 +1,4 @@
+import _Quill from "quill";
 import { registerClockComponent } from "./clock.ts";
 import { TPClock, TPClockControl } from "./clock.ts";
 import { Teleprompter } from "./teleprompter.ts";

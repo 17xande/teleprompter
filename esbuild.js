@@ -10,6 +10,7 @@ const config = {
     "src/frontend/scripts/app.ts",
     "src/frontend/scripts/pop.ts",
     "src/frontend/styles/style.css",
+    "src/frontend/styles/pop.css",
   ],
   entryNames: "[dir]/[name]",
   outdir: "public",

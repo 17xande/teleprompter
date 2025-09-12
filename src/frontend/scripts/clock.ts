@@ -113,7 +113,7 @@ class TPClock extends HTMLTimeElement {
 
   tick() {
     let diff = 1;
-    const locStr = this.targetDate.toLocaleTimeString("en-ZA", dateOptions);
+    let locStr = this.targetDate.toLocaleTimeString("en-ZA", dateOptions);
     switch (this.type) {
       case "clock":
         this.textContent = new Date().toLocaleTimeString("en-ZA", dateOptions);
@@ -135,6 +135,10 @@ class TPClock extends HTMLTimeElement {
       this.textContent = "-";
     } else {
       this.textContent = "";
+    }
+    // Remove hour zeroes:
+    if (this.targetDate.getHours() === 0) {
+      locStr = locStr.substring(3);
     }
     this.textContent += locStr;
   }

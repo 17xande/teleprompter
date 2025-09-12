@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Le teleprompteur</title>
+  <title>Teleprompter</title>
   <link href="/styles/style.css" rel="stylesheet">
   <script type="module" defer src="/scripts/app.js"></script>
 </head>
@@ -23,10 +23,9 @@
       </sl-menu>
     </sl-dropdown>
     <sl-button id="btnPop">Popup</sl-button>
-    <sl-progress-bar id="prgSpeed" value="50" class="progress-bar-values">0pps</sl-progress-bar>
     <sl-range id="rngSpeed" label="Speed" help-text="Controls the scroll speed" min="-500" , max="500" , step="1"
       value="0">0pps</sl-range>
-    <sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="10" step="0.1"></sl-range>
+    <sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="0" max="100" step="0.01" value="1"></sl-range>
     <tp-clock-control id="countdowncontrol" countdown="00:00:00"></tp-clock-control>
     <time is="tp-clock" type="clock"></time>
     <sl-input id="txtMessage" placeholder="Message" label="Message">

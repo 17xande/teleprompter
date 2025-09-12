@@ -1,0 +1,68 @@
+/* @import 'quill/dist/quill.core.css'; */
+@import 'quill/dist/quill.snow.css';
+@import '@shoelace-style/shoelace/dist/themes/dark.css';
+
+:root {
+  --sidebar-width: 300px;
+  --background-color: hsl(240, 5.9%, 11%);
+  --border-width: 1px;
+  --border-color: hsl(240, 5.9%, 11%);
+}
+
+html {
+  /* color: white; */
+  /* background-color: var(--background-color); */
+  /* font-family: "Fira Code", monospace; */
+  font-optical-sizing: auto;
+}
+
+body {
+  font-family: var(--sl-font-mono);
+}
+
+@property --textScale {
+  syntax: "number";
+  inherits: false;
+  initial-value: 0;
+}
+
+.pop-clocks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 8vi;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: black;
+
+  .left,
+  .right {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .mid {
+    /* flex: 1 1 auto; */
+    text-align: center;
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    color: red;
+  }
+
+  time[type="timer"] {
+    color: yellow;
+  }
+
+  /* TODO: move this to clock.css? Best way of web components css? */
+  time[type="timer"].negative {
+    color: red;
+  }
+
+}
+
+.ql-container {
+  font-size: var(--textScale);
+}

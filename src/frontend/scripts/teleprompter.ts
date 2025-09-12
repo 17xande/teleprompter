@@ -74,7 +74,6 @@ export class Teleprompter {
   btnPop: SlButton;
   btnMessage: SlButton;
   quill: Quill;
-  prgSpeed: SlProgressBar;
   rngSpeed: SlRange;
   rngScale: SlRange;
   drpDocuments: SlDropdown;
@@ -96,7 +95,6 @@ export class Teleprompter {
     this.btnPop = <SlButton> document.querySelector("#btnPop");
     this.btnMessage = <SlButton> document.querySelector("#btnMessage");
     this.btnNew = <SlButton> document.querySelector("#btnNew");
-    this.prgSpeed = <SlProgressBar> document.querySelector("#prgSpeed");
     this.rngSpeed = <SlRange> document.querySelector("#rngSpeed");
     this.rngScale = <SlRange> document.querySelector("#rngScale");
     this.controls = <HTMLDivElement> document.querySelector("#controls");
@@ -107,10 +105,12 @@ export class Teleprompter {
     this.btnNew.addEventListener("click", this.newDocument.bind(this));
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
-    this.prgSpeed.addEventListener("wheel", this.listenWheel.bind(this), {
+    this.rngSpeed.addEventListener("wheel", this.listenSpeedWheel.bind(this), {
       passive: false,
     });
-    this.rngScale.addEventListener("sl-input", this.listenRange.bind(this));
+    this.rngScale.addEventListener("wheel", this.listenScaleWheel.bind(this), {
+      passive: false,
+    });
     this.editingName = "";
     this.popDimensions = {
       width: 200,
@@ -312,29 +312,22 @@ export class Teleprompter {
     this.mnuDocuments.appendChild(m);
   }
 
-  listenWheel(e: WheelEvent) {
-    // const r = root.style.getPropertyValue("--rotation")
-    // let rot = 0
-    // if (r) rot = parseInt(r, 10)
-    // root.style.setProperty("--rotation", `${rot + e.deltaY}deg`)
-
+  listenSpeedWheel(e: WheelEvent) {
     e.preventDefault();
 
-    const speed = this.prgSpeed.value * 10 - 500;
-    let percent = this.prgSpeed.value + e.deltaY / 10;
-
-    if (e.deltaY > 0) {
-      percent = Math.min(100, percent);
-    } else {
-      percent = Math.max(0, percent);
-    }
-
-    this.prgSpeed.value = percent;
-    this.prgSpeed.textContent = speed.toFixed(0) + "pps";
-
+    this.rngSpeed.value += e.deltaY;
     if (!this.viewerWindow) return;
 
-    this.viewerWindow.viewer.setSpeed(speed);
+    this.viewerWindow.viewer.setSpeed(this.rngSpeed.value);
+  }
+
+  listenScaleWheel(e: WheelEvent) {
+    e.preventDefault();
+
+    this.rngScale.value += e.deltaY;
+    if (!this.viewerWindow) return;
+
+    this.viewerWindow.viewer.setTextScale(this.rngScale.value / 10);
   }
 
   listenKey(ke: KeyboardEvent) {
@@ -352,11 +345,6 @@ export class Teleprompter {
       default:
         // ignore for now
     }
-  }
-
-  listenRange() {
-    if (!this.viewerWindow) return;
-    this.viewerWindow.viewer.setTextScale(this.rngScale.value);
   }
 
   newDocument() {
