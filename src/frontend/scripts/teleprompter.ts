@@ -157,19 +157,21 @@ export class Teleprompter {
       }
     }
 
-    this.loadDocument(this.currentDocument);
+    this.loadDocument(this.currentDocument, true);
 
     globalThis.addEventListener("keyup", this.listenKey.bind(this));
   }
 
-  loadDocument(docName: string) {
+  loadDocument(docName: string, firstLoad = false) {
     if (this.documents[docName]) {
       const strDoc = this.documents[docName];
       const parsedDoc = JSON.parse(strDoc);
       if (parsedDoc) {
-        this.saveDocument();
-        this.quill.setContents(parsedDoc);
+        if (!firstLoad) {
+          this.saveDocument();
+        }
         this.currentDocument = docName;
+        this.quill.setContents(parsedDoc);
       }
     }
   }
