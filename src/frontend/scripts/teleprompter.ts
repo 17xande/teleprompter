@@ -79,7 +79,8 @@ export class Teleprompter {
   rngScale: SlRange;
   drpDocuments: SlDropdown;
   mnuDocuments: SlMenu;
-  saveDialog: SlDialog;
+  dlgSave: SlDialog;
+  dlgDelete: SlDialog;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   viewerScrollY = 0;
@@ -101,7 +102,8 @@ export class Teleprompter {
     this.controls = <HTMLDivElement> document.querySelector("#controls");
     this.drpDocuments = <SlDropdown> document.querySelector("#drpDocuments");
     this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
-    this.saveDialog = <SlDialog> document.querySelector("#dlgRename");
+    this.dlgSave = <SlDialog> document.querySelector("#dlgRename");
+    this.dlgDelete = <SlDialog> document.querySelector("#dlgDelete");
     this.btnNew.addEventListener("click", this.newDocument.bind(this));
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
@@ -125,21 +127,38 @@ export class Teleprompter {
       this.listenDropClick.bind(this),
     );
 
-    const btnSave = <SlButton> this.saveDialog.querySelector(
+    const btnSave = <SlButton> this.dlgSave.querySelector(
       "sl-button[name=save]",
     );
-    const btnCancel = <SlButton> this.saveDialog.querySelector(
+    const btnCancel = <SlButton> this.dlgSave.querySelector(
       "sl-button[name=cancel]",
     );
-    btnCancel.addEventListener("click", () => this.saveDialog.hide());
+    btnCancel.addEventListener("click", () => this.dlgSave.hide());
     btnSave.addEventListener("click", () => {
-      const input = <SlInput> this.saveDialog.querySelector("sl-input");
-      const hidden = <HTMLInputElement> this.saveDialog.querySelector(
+      const input = <SlInput> this.dlgSave.querySelector("sl-input");
+      const hidden = <HTMLInputElement> this.dlgSave.querySelector(
         "input",
       );
       this.nameSave(hidden.value, input.value);
-      this.saveDialog.hide();
+      this.dlgSave.hide();
     });
+
+    const btnDelete = <SlButton> this.dlgDelete.querySelector(
+      "sl-button[name=delete]",
+    );
+    const btnDelCancel = <SlButton> this.dlgDelete.querySelector(
+      "sl-button[name=cancel]",
+    );
+    btnDelCancel.addEventListener("click", () => this.dlgDelete.hide());
+    btnDelete.addEventListener("click", () => {
+      const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
+        "input",
+      );
+      const docName = hidden.value;
+      this.docDelete(docName);
+      this.dlgDelete.hide();
+    });
+
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
       this.saveDocument;
@@ -197,10 +216,14 @@ export class Teleprompter {
         case "pencil":
           this.nameEdit(menuItem);
           break;
-        case "trash":
-          this.nameDelete(menuItem.value);
-          menuItem.remove();
+        case "trash": {
+          this.dlgDelete.show();
+          const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
+            "input",
+          );
+          hidden.value = menuItem.value;
           break;
+        }
           // case "check":
           //   this.nameSave(menuItem);
           //   break;
@@ -209,16 +232,17 @@ export class Teleprompter {
           //   break;
       }
       return;
+    } else {
+      const selected = e.target.value;
+      this.loadDocument(selected);
     }
-    if (e.target.parentElement?.contentEditable) return;
-    this.drpDocuments.hide();
   }
 
   nameEdit(mi: SlMenuItem) {
     // make a popup
-    this.saveDialog.show();
-    const input = <SlInput> this.saveDialog.querySelector("sl-input");
-    const hidden = <HTMLInputElement> this.saveDialog.querySelector("input");
+    this.dlgSave.show();
+    const input = <SlInput> this.dlgSave.querySelector("sl-input");
+    const hidden = <HTMLInputElement> this.dlgSave.querySelector("input");
     hidden.value = mi.value;
     input.value = mi.value;
     input.select();
@@ -226,7 +250,6 @@ export class Teleprompter {
 
   nameSave(previousName: string, newName: string) {
     const doc = this.documents[previousName];
-    this.nameDelete(previousName);
     this.documents[newName] = doc;
     if (this.currentDocument === previousName) {
       this.currentDocument = newName;
@@ -238,7 +261,7 @@ export class Teleprompter {
     if (!mi) {
       throw new Error("menu item does not exist");
     }
-    mi.remove();
+    this.nameDelete(previousName);
     this.addMenuItem(newName);
     this.saveDB();
   }
@@ -254,16 +277,27 @@ export class Teleprompter {
   }
 
   nameDelete(docName: string) {
+    const items = Array.from(
+      this.drpDocuments.querySelectorAll("sl-menu-item"),
+    );
+    const mi = items.find((e) => e.value === docName);
+    if (!mi) {
+      throw new Error("menu item does not exist");
+    }
+    mi.remove();
+  }
+
+  docDelete(docName: string) {
     const doc = this.documents[docName];
     if (!doc) {
       throw new Error(`Document ${docName} doesn't exist`);
     }
     delete (this.documents[docName]);
+    this.nameDelete(docName);
+    this.saveDB();
   }
 
   listenDropSelect(e: SlSelectEvent) {
-    const selected = e.detail.item.value;
-    this.loadDocument(selected);
   }
 
   addMenuItem(docName: string) {
