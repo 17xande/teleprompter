@@ -17,9 +17,9 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Space bar scroll start/stop
 - [x] On update content, scroll to same location
 - [x] Red negative clock
-- [ ] Store and retrieve multiple documents
-- [ ] Change scroll speed progress control to a vertical scale control
-- [ ] Omit hours counter from countdown clock
+- [x] Store and retrieve multiple documents
+- [x] Change scroll speed progress control to a vertical scale control
+- [x] Omit hours counter from countdown clock
 
 ### Future
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)
@@ -27,6 +27,8 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Automatically invert dark text on paste
 - [ ] Keyboard shortcuts
+  - [ ] clocks
+  - [ ] font colour
 - [ ] Prompter preview render
 - [ ] Rename project to "Prompter"?
 - [ ] Prompter themes/layouts (CSS based)
