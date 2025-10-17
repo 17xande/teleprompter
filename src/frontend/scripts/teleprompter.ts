@@ -161,7 +161,7 @@ export class Teleprompter {
 
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
-      this.saveDocument;
+      this.saveDocument();
       this.saveDB();
     });
 
