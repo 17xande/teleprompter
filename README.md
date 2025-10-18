@@ -20,12 +20,15 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Store and retrieve multiple documents
 - [x] Change scroll speed progress control to a vertical scale control
 - [x] Omit hours counter from countdown clock
+- [ ] Add preview pane.
 
 ### Future
+- [ ] Make interface pretty.
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)
 - [ ] Keep clocks running when refreshing popup.
-- [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Automatically invert dark text on paste
+- [ ] Switch shoelace for webawesome.
+- [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Keyboard shortcuts
   - [ ] clocks
   - [ ] font colour

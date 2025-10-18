@@ -297,7 +297,7 @@ export class Teleprompter {
     this.saveDB();
   }
 
-  listenDropSelect(e: SlSelectEvent) {
+  listenDropSelect(_e: SlSelectEvent) {
   }
 
   addMenuItem(docName: string) {
