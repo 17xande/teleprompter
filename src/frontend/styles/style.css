@@ -51,6 +51,16 @@ body {
   height: 92vh;
 }
 
+#ifrmPreview {
+  border: none;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hidden {
+  display: none;
+}
+
 .pop-clocks {
   display: flex;
   justify-content: space-between;

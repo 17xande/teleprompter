@@ -25,13 +25,19 @@ export class Viewer {
 
     // TODO: move this to own function.
     globalThis.addEventListener("load", () => {
-      this.controller = globalThis.opener.teleprompter;
+      let controllerWindow = globalThis.opener;
+      // Detect if it's an iframe
+      if (globalThis.self !== globalThis.top) {
+        controllerWindow = globalThis.parent;
+      }
+      this.controller = controllerWindow.teleprompter;
       this.controller?.updateMain();
 
       const tpPopClock = <TPClock> document.querySelector(
         "#timeTimer",
       );
-      const tpClockControl = <TPClockControl> globalThis.opener.document
+
+      const tpClockControl = <TPClockControl> controllerWindow.document
         .querySelector(
           "#countdowncontrol",
         );
@@ -51,8 +57,10 @@ export class Viewer {
       this.startSmoothScroll();
     });
 
-    globalThis.addEventListener("scroll", this.listenScroll.bind(this));
-    globalThis.addEventListener("resize", this.listenResize.bind(this));
+    if (globalThis.self == globalThis.top) {
+      globalThis.addEventListener("scroll", this.listenScroll.bind(this));
+      globalThis.addEventListener("resize", this.listenResize.bind(this));
+    }
   }
 
   listenResize() {

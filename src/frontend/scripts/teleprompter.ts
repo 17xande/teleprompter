@@ -1,7 +1,6 @@
 import { ToolbarConfig } from "quill/modules/toolbar";
 import Quill, { QuillOptions } from "quill";
 import "@shoelace-style/shoelace/dist/components/drawer/drawer.js";
-import "@shoelace-style/shoelace/dist/components/progress-bar/progress-bar.js";
 import "@shoelace-style/shoelace/dist/components/range/range.js";
 import "@shoelace-style/shoelace/dist/components/input/input.js";
 import "@shoelace-style/shoelace/dist/components/button/button.js";
@@ -24,7 +23,6 @@ import {
   SlInput,
   SlMenu,
   SlMenuItem,
-  SlProgressBar,
   SlRange,
   SlSelectEvent,
 } from "@shoelace-style/shoelace/dist/shoelace.js";
@@ -111,6 +109,8 @@ export class Teleprompter {
     this.rngScale.addEventListener("wheel", this.listenScaleWheel.bind(this), {
       passive: false,
     });
+    this.rngSpeed.addEventListener("input", this.listenRangeSpeed.bind(this));
+    this.rngScale.addEventListener("input", this.listenRangeScale.bind(this));
     this.editingName = "";
     this.popDimensions = {
       width: 200,
@@ -316,18 +316,22 @@ export class Teleprompter {
     e.preventDefault();
 
     this.rngSpeed.value += e.deltaY;
-    if (!this.viewerWindow) return;
+    this.viewerWindow?.viewer.setSpeed(this.rngSpeed.value);
+  }
 
-    this.viewerWindow.viewer.setSpeed(this.rngSpeed.value);
+  listenRangeSpeed() {
+    this.viewerWindow?.viewer.setSpeed(this.rngSpeed.value);
   }
 
   listenScaleWheel(e: WheelEvent) {
     e.preventDefault();
 
-    this.rngScale.value += e.deltaY;
-    if (!this.viewerWindow) return;
+    this.rngScale.value += e.deltaY / 30;
+    this.viewerWindow?.viewer.setTextScale(this.rngScale.value / 10);
+  }
 
-    this.viewerWindow.viewer.setTextScale(this.rngScale.value / 10);
+  listenRangeScale() {
+    this.viewerWindow?.viewer.setTextScale(this.rngScale.value / 10);
   }
 
   listenKey(ke: KeyboardEvent) {
