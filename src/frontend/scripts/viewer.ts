@@ -14,6 +14,7 @@ export class Viewer {
   messageMax = 75;
   scroll = false;
   scrollY = 0;
+  scrollTop = 0;
   height = 0;
   width = 0;
   x = 0;
@@ -38,9 +39,8 @@ export class Viewer {
       );
 
       const tpClockControl = <TPClockControl> controllerWindow.document
-        .querySelector(
-          "#countdowncontrol",
-        );
+        .querySelector("#countdowncontrol");
+
       if (!tpPopClock) {
         throw new Error("tp-clock not found on popup");
       }
@@ -80,6 +80,8 @@ export class Viewer {
     this.width = globalThis.outerWidth;
     this.x = globalThis.screenX;
     this.y = globalThis.screenY;
+    this.scrollTop = globalThis.pageYOffset ||
+      document.documentElement.scrollTop;
     if (!this.controller) return;
     this.controller.popDimensions.height = this.height;
     this.controller.popDimensions.width = this.width;

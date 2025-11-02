@@ -80,6 +80,7 @@ export class Teleprompter {
   dlgDelete: SlDialog;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
+  previewer: Viewer | null = null;
   viewerScrollY = 0;
   popDimensions: PopupDimensions;
   controls: HTMLDivElement;
@@ -100,6 +101,10 @@ export class Teleprompter {
     this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
     this.dlgSave = <SlDialog> document.querySelector("#dlgRename");
     this.dlgDelete = <SlDialog> document.querySelector("#dlgDelete");
+
+    const ifrmPreview = <HTMLIFrameElement> document.querySelector(
+      "#ifrmPreview",
+    );
     this.btnNew.addEventListener("click", this.newDocument.bind(this));
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
@@ -179,6 +184,17 @@ export class Teleprompter {
     this.loadDocument(this.currentDocument, true);
 
     globalThis.addEventListener("keyup", this.listenKey.bind(this));
+    ifrmPreview.addEventListener("load", () => {
+      if (!ifrmPreview.contentWindow?.viewer) {
+        throw new Error("no viewer on preview.");
+      }
+      this.previewer = ifrmPreview.contentWindow?.viewer;
+      if (!ifrmPreview.contentDocument) {
+        throw new Error("no iframe content document");
+      }
+      ifrmPreview.contentDocument.body.style.overflow = "hidden";
+      this.updateMain();
+    });
   }
 
   loadDocument(docName: string, firstLoad = false) {
@@ -371,13 +387,15 @@ export class Teleprompter {
   }
 
   updateMain() {
-    if (!this.viewerWindow) return;
     const editor = <HTMLDivElement> document.querySelector(
       "#editor > .ql-editor",
     );
     if (!editor) {
       return console.error("editor not found!");
     }
+    if (!this.previewer) return;
+    this.previewer.setContent(editor.innerHTML);
+    if (!this.viewerWindow) return;
     this.viewer = this.viewerWindow.viewer;
     this.viewer.setContent(editor.innerHTML);
   }
@@ -391,5 +409,13 @@ export class Teleprompter {
     const ss = String(d.getSeconds()).padStart(2, "0");
 
     return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
+  }
+
+  listenResize() {
+    console.log("got resize call");
+  }
+
+  listenScroll() {
+    console.log("got scroll call");
   }
 }
