@@ -13,6 +13,7 @@ export class Viewer {
   messageMin = 10;
   messageMax = 75;
   scroll = false;
+  isScrolling = false;
   scrollY = 0;
   scrollTop = 0;
   height = 0;
@@ -69,10 +70,18 @@ export class Viewer {
   }
 
   listenScroll() {
-    this.scrollY = globalThis.scrollY;
-    if (this.controller) {
-      this.controller.viewerScrollY = globalThis.scrollY;
-    }
+    if (this.isScrolling) return;
+    globalThis.requestAnimationFrame(() => {
+      this.scrollY = globalThis.scrollY;
+      this.scrollTop = globalThis.pageYOffset ||
+        document.documentElement.scrollTop;
+      if (this.controller) {
+        this.controller.viewerScrollY = globalThis.scrollY;
+        this.controller.listenScroll(this.scrollTop);
+      }
+      this.isScrolling = false;
+    });
+    this.isScrolling = true;
   }
 
   saveDimensions() {

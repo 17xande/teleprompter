@@ -81,6 +81,7 @@ export class Teleprompter {
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   previewer: Viewer | null = null;
+  ifrmPreview: HTMLIFrameElement;
   viewerScrollY = 0;
   popDimensions: PopupDimensions;
   controls: HTMLDivElement;
@@ -102,7 +103,7 @@ export class Teleprompter {
     this.dlgSave = <SlDialog> document.querySelector("#dlgRename");
     this.dlgDelete = <SlDialog> document.querySelector("#dlgDelete");
 
-    const ifrmPreview = <HTMLIFrameElement> document.querySelector(
+    this.ifrmPreview = <HTMLIFrameElement> document.querySelector(
       "#ifrmPreview",
     );
     this.btnNew.addEventListener("click", this.newDocument.bind(this));
@@ -184,15 +185,15 @@ export class Teleprompter {
     this.loadDocument(this.currentDocument, true);
 
     globalThis.addEventListener("keyup", this.listenKey.bind(this));
-    ifrmPreview.addEventListener("load", () => {
-      if (!ifrmPreview.contentWindow?.viewer) {
+    this.ifrmPreview.addEventListener("load", () => {
+      if (!this.ifrmPreview.contentWindow?.viewer) {
         throw new Error("no viewer on preview.");
       }
-      this.previewer = ifrmPreview.contentWindow?.viewer;
-      if (!ifrmPreview.contentDocument) {
+      this.previewer = this.ifrmPreview.contentWindow?.viewer;
+      if (!this.ifrmPreview.contentDocument) {
         throw new Error("no iframe content document");
       }
-      ifrmPreview.contentDocument.body.style.overflow = "hidden";
+      this.ifrmPreview.contentDocument.body.style.overflow = "hidden";
       this.updateMain();
     });
   }
@@ -415,7 +416,7 @@ export class Teleprompter {
     console.log("got resize call");
   }
 
-  listenScroll() {
-    console.log("got scroll call");
+  listenScroll(scrollTop: number) {
+    this.ifrmPreview.contentWindow?.scrollTo(0, scrollTop);
   }
 }
