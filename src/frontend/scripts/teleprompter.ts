@@ -68,6 +68,7 @@ interface DynamicObject {
 }
 
 export class Teleprompter {
+  static readonly MAX_PREVIEW_SIZE = 300;
   btnNew: SlButton;
   btnPop: SlButton;
   btnMessage: SlButton;
@@ -412,8 +413,20 @@ export class Teleprompter {
     return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
   }
 
-  listenResize() {
-    console.log("got resize call");
+  listenResize(innerWidth: number, innerHeight: number) {
+    // Calculate scale factor to fit within max preview size while maintaining aspect ratio.
+    const scaleX = Teleprompter.MAX_PREVIEW_SIZE / this.popDimensions.width;
+    const scaleY = Teleprompter.MAX_PREVIEW_SIZE / this.popDimensions.height;
+    const scale = Math.min(scaleX, scaleY);
+
+    // Calculate preview container dimensions.
+    const previewWidth = this.popDimensions.width * scale;
+    const previewHeigh = this.popDimensions.height * scale;
+
+    this.ifrmPreview.style.width = innerWidth + "px";
+    this.ifrmPreview.style.height = innerHeight + "px";
+    this.ifrmPreview.style.transform = `scale(${scale})`;
+    this.ifrmPreview.style.transformOrigin = "top left";
   }
 
   listenScroll(scrollTop: number) {

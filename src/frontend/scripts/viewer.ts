@@ -14,6 +14,7 @@ export class Viewer {
   messageMax = 75;
   scroll = false;
   isScrolling = false;
+  isResizing = false;
   scrollY = 0;
   scrollTop = 0;
   height = 0;
@@ -65,8 +66,13 @@ export class Viewer {
   }
 
   listenResize() {
-    this.saveDimensions();
-    this.resizeMessage();
+    if (this.isResizing) return;
+    globalThis.requestAnimationFrame(() => {
+      this.saveDimensions();
+      this.resizeMessage();
+      this.isResizing = false;
+    });
+    this.isResizing = true;
   }
 
   listenScroll() {
@@ -76,6 +82,7 @@ export class Viewer {
       this.scrollTop = globalThis.pageYOffset ||
         document.documentElement.scrollTop;
       if (this.controller) {
+        // TODO: set this in the controller.listenscroll. Best not to change variables directly = side effects
         this.controller.viewerScrollY = globalThis.scrollY;
         this.controller.listenScroll(this.scrollTop);
       }
@@ -89,13 +96,13 @@ export class Viewer {
     this.width = globalThis.outerWidth;
     this.x = globalThis.screenX;
     this.y = globalThis.screenY;
-    this.scrollTop = globalThis.pageYOffset ||
-      document.documentElement.scrollTop;
     if (!this.controller) return;
     this.controller.popDimensions.height = this.height;
     this.controller.popDimensions.width = this.width;
     this.controller.popDimensions.x = this.x;
     this.controller.popDimensions.y = this.y;
+    // TODO: send all thse values in the listeResize, no side effects is a better strategy
+    this.controller.listenResize(globalThis.innerWidth, globalThis.innerHeight);
   }
 
   resizeMessage() {
