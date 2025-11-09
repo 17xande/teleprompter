@@ -68,7 +68,8 @@ interface DynamicObject {
 }
 
 export class Teleprompter {
-  static readonly MAX_PREVIEW_SIZE = 300;
+  static readonly MAX_PREVIEW_WIDTH = 300;
+  static readonly MAX_PREVIEW_HEIGHT = 450;
   btnNew: SlButton;
   btnPop: SlButton;
   btnMessage: SlButton;
@@ -415,13 +416,18 @@ export class Teleprompter {
 
   listenResize(innerWidth: number, innerHeight: number) {
     // Calculate scale factor to fit within max preview size while maintaining aspect ratio.
-    const scaleX = Teleprompter.MAX_PREVIEW_SIZE / this.popDimensions.width;
-    const scaleY = Teleprompter.MAX_PREVIEW_SIZE / this.popDimensions.height;
+    const scaleX = Teleprompter.MAX_PREVIEW_WIDTH / this.popDimensions.width;
+    const scaleY = Teleprompter.MAX_PREVIEW_HEIGHT / this.popDimensions.height;
     const scale = Math.min(scaleX, scaleY);
 
     // Calculate preview container dimensions.
     const previewWidth = this.popDimensions.width * scale;
     const previewHeigh = this.popDimensions.height * scale;
+
+    const previewContainer = <HTMLDivElement> this.ifrmPreview.parentElement;
+
+    previewContainer.style.width = previewWidth + "px";
+    previewContainer.style.height = previewHeigh + "px";
 
     this.ifrmPreview.style.width = innerWidth + "px";
     this.ifrmPreview.style.height = innerHeight + "px";

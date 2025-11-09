@@ -24,17 +24,18 @@
     </sl-dropdown>
     <sl-button id="btnPop">Popup</sl-button>
 
-      <!-- Preview component -->
-      <div id="divPreview">
-        <div class="preview-header">
-          <h3>Preview</h3>
-        </div>
+    <!-- Preview component -->
+    <div id="divPreview">
+      <h3>Preview</h3>
+      <div id="divIFrameContainer">
         <iframe id="ifrmPreview" src="/html/pop.html"></iframe>
       </div>
+    </div>
 
     <sl-range id="rngSpeed" label="Speed" help-text="Controls the scroll speed" min="-500" , max="500" , step="1"
       value="0">0pps</sl-range>
-    <sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="100" step="0.01" value="1"></sl-range>
+    <sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="100" step="0.01"
+      value="1"></sl-range>
     <tp-clock-control id="countdowncontrol" countdown="00:00:00"></tp-clock-control>
     <time is="tp-clock" type="clock"></time>
     <sl-input id="txtMessage" placeholder="Message" label="Message">
@@ -45,18 +46,18 @@
       Send Message
     </sl-button>
   </aside>
-    <sl-dialog id="dlgRename" label="Rename Document" class="dialog-focus">
-      <sl-input autofocus></sl-input>
-      <input type="hidden"></input>
-      <sl-button name="save" slot="footer" variant="primary">Save</sl-button>
-      <sl-button name="cancel" slot="footer">Cancel</sl-button>
-    </sl-dialog>
-    <sl-dialog id="dlgDelete", label="Delete Document" class="dialog-focus">
-      Are you sure you want to delete document
-      <sl-button name="delete" slot="footer" variant="primary">Delete</sl-button>
-      <sl-button name="cancel" slot="footer">Cancel</sl-button>
-      <input type="hidden"></input>
-    </sl-dialog>
+  <sl-dialog id="dlgRename" label="Rename Document" class="dialog-focus">
+    <sl-input autofocus></sl-input>
+    <input type="hidden"></input>
+    <sl-button name="save" slot="footer" variant="primary">Save</sl-button>
+    <sl-button name="cancel" slot="footer">Cancel</sl-button>
+  </sl-dialog>
+  <sl-dialog id="dlgDelete" , label="Delete Document" class="dialog-focus">
+    Are you sure you want to delete document
+    <sl-button name="delete" slot="footer" variant="primary">Delete</sl-button>
+    <sl-button name="cancel" slot="footer">Cancel</sl-button>
+    <input type="hidden"></input>
+  </sl-dialog>
 </body>
 
 </html>
