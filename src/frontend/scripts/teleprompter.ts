@@ -438,4 +438,8 @@ export class Teleprompter {
   listenScroll(scrollTop: number) {
     this.ifrmPreview.contentWindow?.scrollTo(0, scrollTop);
   }
+
+  listenIFrameScale(scale: number) {
+    this.ifrmPreview.contentWindow?.viewer.setTextScale(scale);
+  }
 }
