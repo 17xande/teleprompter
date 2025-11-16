@@ -170,7 +170,6 @@ export class Viewer {
 
   setTextScale(scale: number) {
     this.root.style.setProperty("--textScale", `${scale}rem`);
-    this.controller?.listenIFrameScale(scale);
   }
 
   setContent(content: string) {
