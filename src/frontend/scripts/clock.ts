@@ -6,16 +6,25 @@ import { SlButton, SlInput } from "@shoelace-style/shoelace";
  * <tp-clock-control id="countdowncontrol" countdown="00:00:00"></tp-clock-control>
  */
 class TPClockControl extends HTMLElement {
-  inTimeCountdown: SlInput | null = null;
-  btnStart: SlButton | null = null;
-  btnStop: SlButton | null = null;
-  btnReset: SlButton | null = null;
-  countdown: TPClock | null = null;
+  inHour: SlInput;
+  inMinute: SlInput;
+  inSecond: SlInput;
+  btnStart: SlButton;
+  btnStop: SlButton;
+  btnReset: SlButton;
+  countdown: TPClock;
   popCountdown: TPClock | null = null;
 
   constructor() {
     // TODO: don't think I need this when extending HTMLElement.
     super();
+    this.inHour = <SlInput> this.querySelector("#inHour");
+    this.inMinute = <SlInput> this.querySelector("#inMinute");
+    this.inSecond = <SlInput> this.querySelector("#inSecond");
+    this.btnStart = <SlButton> this.querySelector("#btnCountdownStart");
+    this.btnStop = <SlButton> this.querySelector("#btnCountdownStop");
+    this.btnReset = <SlButton> this.querySelector("#btnCountdownReset");
+    this.countdown = <TPClock> this.querySelector("#timeCountdown");
   }
 
   connectedCallback() {
@@ -27,7 +36,6 @@ class TPClockControl extends HTMLElement {
     <sl-input id="inMinute" type="number" value="00"></sl-input><span>:</span>
     <sl-input id="inSecond" type="number" value="00"></sl-input>
     </div>
-		<sl-input id="inTimeCountdown" type="time" value="00:00:00" step="1" pill clearable></sl-input>
 		<sl-button id="btnCountdownReset">Reset</sl-button>
 		<sl-button id="btnCountdownStart">Start</sl-button>
 		<sl-button id="btnCountdownStop">Stop</sl-button>
@@ -50,7 +58,9 @@ class TPClockControl extends HTMLElement {
   }
 
   update() {
-    this.inTimeCountdown = <SlInput> this.querySelector("#inTimeCountdown");
+    this.inHour = <SlInput> this.querySelector("#inHour");
+    this.inMinute = <SlInput> this.querySelector("#inMinute");
+    this.inSecond = <SlInput> this.querySelector("#inSecond");
     this.btnStart = <SlButton> this.querySelector("#btnCountdownStart");
     this.btnStop = <SlButton> this.querySelector("#btnCountdownStop");
     this.btnReset = <SlButton> this.querySelector("#btnCountdownReset");
@@ -71,16 +81,17 @@ class TPClockControl extends HTMLElement {
     });
 
     this.btnReset.addEventListener("click", () => {
-      if (this.inTimeCountdown == null) {
-        throw ("inTimeCountdown is null");
-      }
-      this.countdown?.setAttribute("timer", this.inTimeCountdown.value);
+      this.countdown?.setAttribute("timer", this.value());
       this.countdown?.reset();
       if (this.popCountdown) {
-        this.popCountdown.setAttribute("timer", this.inTimeCountdown.value);
+        this.popCountdown.setAttribute("timer", this.value());
         this.popCountdown.reset();
       }
     });
+  }
+
+  value(): string {
+    return `${this.inHour.value}:${this.inMinute.value}:${this.inSecond.value}`;
   }
 }
 
