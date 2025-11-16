@@ -98,6 +98,16 @@ body {
 
 }
 
+tp-clock-control {
+  .wrapper {
+    display: flex;
+
+    sl-input {
+      width: 5rem;
+    }
+  }
+}
+
 .ql-container {
   font-size: var(--textScale);
 }

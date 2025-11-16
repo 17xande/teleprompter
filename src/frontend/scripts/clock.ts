@@ -21,6 +21,12 @@ class TPClockControl extends HTMLElement {
   connectedCallback() {
     // TODO: import that html template literal function from the vanilla website.
     this.innerHTML = `
+    <h3>Timer Control</h3>
+    <div class="wrapper">
+    <sl-input id="inHour" type="number" value="00"></sl-input><span>:</span>
+    <sl-input id="inMinute" type="number" value="00"></sl-input><span>:</span>
+    <sl-input id="inSecond" type="number" value="00"></sl-input>
+    </div>
 		<sl-input id="inTimeCountdown" type="time" value="00:00:00" step="1" pill clearable></sl-input>
 		<sl-button id="btnCountdownReset">Reset</sl-button>
 		<sl-button id="btnCountdownStart">Start</sl-button>
