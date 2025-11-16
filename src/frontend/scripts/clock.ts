@@ -1,4 +1,11 @@
 import { SlButton, SlInput } from "@shoelace-style/shoelace";
+
+interface ResetEvent extends CustomEvent {
+  detail: {
+    time: string;
+  };
+}
+
 /**
  * Teleprompter countdown clock control component.
  *
@@ -13,18 +20,22 @@ class TPClockControl extends HTMLElement {
   btnStop: SlButton;
   btnReset: SlButton;
   countdown: TPClock;
+  // TODO: I think it's best for this component to not be aware of various countdowns.
+  // Rather, it should issue an event, which the other clocks can subscribe to.
   popCountdown: TPClock | null = null;
 
   constructor() {
     // TODO: don't think I need this when extending HTMLElement.
     super();
-    this.inHour = <SlInput> this.querySelector("#inHour");
-    this.inMinute = <SlInput> this.querySelector("#inMinute");
-    this.inSecond = <SlInput> this.querySelector("#inSecond");
-    this.btnStart = <SlButton> this.querySelector("#btnCountdownStart");
-    this.btnStop = <SlButton> this.querySelector("#btnCountdownStop");
-    this.btnReset = <SlButton> this.querySelector("#btnCountdownReset");
-    this.countdown = <TPClock> this.querySelector("#timeCountdown");
+    // These are actually needed in the Update method, but I'm including them here to prevent a TS error.
+    // If there's a better way to do this, do it.
+    this.inHour = this.querySelector("#inHour")!;
+    this.inMinute = this.querySelector("#inMinute")!;
+    this.inSecond = this.querySelector("#inSecond")!;
+    this.btnStart = this.querySelector("#btnCountdownStart")!;
+    this.btnStop = this.querySelector("#btnCountdownStop")!;
+    this.btnReset = this.querySelector("#btnCountdownReset")!;
+    this.countdown = this.querySelector("#timeCountdown")!;
   }
 
   connectedCallback() {
@@ -58,35 +69,43 @@ class TPClockControl extends HTMLElement {
   }
 
   update() {
-    this.inHour = <SlInput> this.querySelector("#inHour");
-    this.inMinute = <SlInput> this.querySelector("#inMinute");
-    this.inSecond = <SlInput> this.querySelector("#inSecond");
-    this.btnStart = <SlButton> this.querySelector("#btnCountdownStart");
-    this.btnStop = <SlButton> this.querySelector("#btnCountdownStop");
-    this.btnReset = <SlButton> this.querySelector("#btnCountdownReset");
-    this.countdown = <TPClock> this.querySelector("#timeCountdown");
+    this.inHour = this.querySelector("#inHour")!;
+    this.inMinute = this.querySelector("#inMinute")!;
+    this.inSecond = this.querySelector("#inSecond")!;
+    this.btnStart = this.querySelector("#btnCountdownStart")!;
+    this.btnStop = this.querySelector("#btnCountdownStop")!;
+    this.btnReset = this.querySelector("#btnCountdownReset")!;
+    this.countdown = this.querySelector("#timeCountdown")!;
 
     this.btnStart.addEventListener("click", () => {
+      const evStart = new CustomEvent("start", {
+        detail: {},
+        bubbles: false,
+        composed: false,
+      });
+      this.dispatchEvent(evStart);
+
       this.countdown?.start();
-      if (this.popCountdown) {
-        this.popCountdown.start();
-      }
     });
 
     this.btnStop.addEventListener("click", () => {
+      const evStop = new CustomEvent("stop", {
+        detail: {},
+        bubbles: false,
+        composed: false,
+      });
+      this.dispatchEvent(evStop);
       this.countdown?.stop();
-      if (this.popCountdown) {
-        this.popCountdown.stop();
-      }
     });
 
     this.btnReset.addEventListener("click", () => {
-      this.countdown?.setAttribute("timer", this.value());
-      this.countdown?.reset();
-      if (this.popCountdown) {
-        this.popCountdown.setAttribute("timer", this.value());
-        this.popCountdown.reset();
-      }
+      const evReset = new CustomEvent<ResetEvent["detail"]>("reset", {
+        detail: { time: this.value() },
+        bubbles: false,
+        composed: false,
+      });
+      this.dispatchEvent(evReset);
+      this.countdown?.reset(this.value());
     });
   }
 
@@ -173,8 +192,11 @@ class TPClock extends HTMLTimeElement {
     this.interval = -1;
   }
 
-  reset() {
+  reset(strTime: string | null) {
     this.stop();
+    if (strTime) {
+      this.setAttribute("timer", strTime);
+    }
     this.parseTimer();
   }
 
@@ -242,3 +264,5 @@ export {
   TPClock,
   TPClockControl,
 };
+
+export type { ResetEvent };

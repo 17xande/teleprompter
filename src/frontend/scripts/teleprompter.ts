@@ -12,6 +12,8 @@ import "@shoelace-style/shoelace/dist/components/icon-button/icon-button.js";
 import {
   registerClockComponent,
   registerClockControlComponent,
+  ResetEvent,
+  TPClockControl,
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
@@ -80,6 +82,7 @@ export class Teleprompter {
   mnuDocuments: SlMenu;
   dlgSave: SlDialog;
   dlgDelete: SlDialog;
+  tpClockControl: TPClockControl;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
   previewer: Viewer | null = null;
@@ -94,16 +97,17 @@ export class Teleprompter {
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
-    this.btnPop = <SlButton> document.querySelector("#btnPop");
-    this.btnMessage = <SlButton> document.querySelector("#btnMessage");
-    this.btnNew = <SlButton> document.querySelector("#btnNew");
-    this.rngSpeed = <SlRange> document.querySelector("#rngSpeed");
-    this.rngScale = <SlRange> document.querySelector("#rngScale");
-    this.controls = <HTMLDivElement> document.querySelector("#controls");
-    this.drpDocuments = <SlDropdown> document.querySelector("#drpDocuments");
-    this.mnuDocuments = <SlMenu> document.querySelector("#mnuDocuments");
-    this.dlgSave = <SlDialog> document.querySelector("#dlgRename");
-    this.dlgDelete = <SlDialog> document.querySelector("#dlgDelete");
+    this.btnPop = document.querySelector("#btnPop")!;
+    this.btnMessage = document.querySelector("#btnMessage")!;
+    this.btnNew = document.querySelector("#btnNew")!;
+    this.rngSpeed = document.querySelector("#rngSpeed")!;
+    this.rngScale = document.querySelector("#rngScale")!;
+    this.controls = document.querySelector("#controls")!;
+    this.drpDocuments = document.querySelector("#drpDocuments")!;
+    this.mnuDocuments = document.querySelector("#mnuDocuments")!;
+    this.dlgSave = document.querySelector("#dlgRename")!;
+    this.dlgDelete = document.querySelector("#dlgDelete")!;
+    this.tpClockControl = document.querySelector("#tpClockControl")!;
 
     this.ifrmPreview = <HTMLIFrameElement> document.querySelector(
       "#ifrmPreview",
@@ -119,6 +123,26 @@ export class Teleprompter {
     });
     this.rngSpeed.addEventListener("input", this.listenRangeSpeed.bind(this));
     this.rngScale.addEventListener("input", this.listenRangeScale.bind(this));
+
+    this.tpClockControl.addEventListener("start", () => {
+      this.previewer?.timer.start();
+      this.viewer?.timer.start();
+    });
+
+    this.tpClockControl.addEventListener("stop", () => {
+      this.previewer?.timer.stop();
+      this.viewer?.timer.stop();
+    });
+
+    this.tpClockControl.addEventListener(
+      "reset",
+      (event) => {
+        const ev = event as ResetEvent;
+        this.previewer?.timer.reset(ev.detail.time);
+        this.viewer?.timer.reset(ev.detail.time);
+      },
+    );
+
     this.editingName = "";
     this.popDimensions = {
       width: 200,
@@ -195,6 +219,7 @@ export class Teleprompter {
       if (!this.ifrmPreview.contentDocument) {
         throw new Error("no iframe content document");
       }
+      // TODO: should this be in the constructor of the viewer?
       this.ifrmPreview.contentDocument.body.style.overflow = "hidden";
       this.updateMain();
     });

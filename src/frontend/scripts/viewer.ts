@@ -10,6 +10,7 @@ export class Viewer {
   scrollSpeed: number = 0;
   root = <HTMLHtmlElement> document.querySelector(":root");
   spanMessage = <HTMLSpanElement> document.querySelector("#message");
+  timer: TPClock;
   messageMin = 10;
   messageMax = 75;
   scroll = false;
@@ -24,7 +25,8 @@ export class Viewer {
 
   constructor() {
     registerClockComponent();
-    this.root = <HTMLHtmlElement> document.querySelector(":root");
+    this.root = document.querySelector(":root")!;
+    this.timer = document.querySelector("#timeTimer")!;
 
     // TODO: move this to own function.
     globalThis.addEventListener("load", () => {
@@ -41,7 +43,7 @@ export class Viewer {
       );
 
       const tpClockControl = <TPClockControl> controllerWindow.document
-        .querySelector("#countdowncontrol");
+        .querySelector("#tpClockControl");
 
       if (!tpPopClock) {
         throw new Error("tp-clock not found on popup");
@@ -51,6 +53,7 @@ export class Viewer {
         throw new Error("tp-clock-control not found on main");
       }
 
+      // TODO: remove this, we should use events to do things.
       tpClockControl.popCountdown = tpPopClock;
       if (this.controller) {
         globalThis.scroll(0, this.controller.viewerScrollY);
