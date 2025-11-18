@@ -369,13 +369,17 @@ export class Teleprompter {
 
   listenScaleWheel(e: WheelEvent) {
     e.preventDefault();
+    const scale = this.rngScale.value += e.deltaY / 30;
 
-    this.rngScale.value += e.deltaY / 30;
-    this.viewerWindow?.viewer.setTextScale(this.rngScale.value / 10);
+    this.rngScale.value = scale;
+    this.viewerWindow?.viewer.setTextScale(scale / 10);
+    this.previewer?.setTextScale(scale / 10);
   }
 
   listenRangeScale() {
-    this.viewerWindow?.viewer.setTextScale(this.rngScale.value / 10);
+    const scale = this.rngScale.value / 10;
+    this.viewerWindow?.viewer.setTextScale(scale);
+    this.previewer?.setTextScale(scale);
   }
 
   listenKey(ke: KeyboardEvent) {
@@ -464,7 +468,7 @@ export class Teleprompter {
     this.ifrmPreview.contentWindow?.scrollTo(0, scrollTop);
   }
 
-  listenIFrameScale(scale: number) {
-    this.ifrmPreview.contentWindow?.viewer.setTextScale(scale);
-  }
+  // listenIFrameScale(scale: number) {
+  //   this.ifrmPreview.contentWindow?.viewer.setTextScale(scale);
+  // }
 }
