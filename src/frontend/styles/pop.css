@@ -1,6 +1,4 @@
 /* @import 'quill/dist/quill.core.css'; */
-@import 'quill/dist/quill.snow.css';
-@import '@shoelace-style/shoelace/dist/themes/dark.css';
 
 :root {
   --sidebar-width: 300px;

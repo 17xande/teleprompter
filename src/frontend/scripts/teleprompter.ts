@@ -1,14 +1,5 @@
 import { ToolbarConfig } from "quill/modules/toolbar";
 import Quill, { QuillOptions } from "quill";
-import "@shoelace-style/shoelace/dist/components/drawer/drawer.js";
-import "@shoelace-style/shoelace/dist/components/range/range.js";
-import "@shoelace-style/shoelace/dist/components/input/input.js";
-import "@shoelace-style/shoelace/dist/components/button/button.js";
-import "@shoelace-style/shoelace/dist/components/dropdown/dropdown.js";
-import "@shoelace-style/shoelace/dist/components/menu/menu.js";
-import "@shoelace-style/shoelace/dist/components/menu-item/menu-item.js";
-import "@shoelace-style/shoelace/dist/components/divider/divider.js";
-import "@shoelace-style/shoelace/dist/components/icon-button/icon-button.js";
 import {
   registerClockComponent,
   registerClockControlComponent,
@@ -17,17 +8,27 @@ import {
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
-import {
-  SlButton,
-  SlDialog,
-  SlDropdown,
-  SlIconButton,
-  SlInput,
-  SlMenu,
-  SlMenuItem,
-  SlRange,
-  SlSelectEvent,
-} from "@shoelace-style/shoelace/dist/shoelace.js";
+import WaButton from "@awesome.me/webawesome/dist/components/button/button.js";
+import WaDialog from "@awesome.me/webawesome/dist/components/dialog/dialog.js";
+import WaDropdown from "@awesome.me/webawesome/dist/components/dropdown/dropdown.js";
+import WaDropdownItem from "@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js";
+import WaIcon from "@awesome.me/webawesome/dist/components/icon/icon.js";
+import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
+import WaSlider from "@awesome.me/webawesome/dist/components/slider/slider.js";
+
+// Prevent treeshaking
+const check = WaButton && WaDialog && WaDropdown && WaDropdownItem && WaIcon &&
+  WaInput && WaSlider;
+console.log(check);
+
+// CSS imports
+import "quill/dist/quill.snow.css";
+// import "@awesome.me/webawesome/dist/styles/webawesome.css";
+import "@awesome.me/webawesome/dist/styles/themes/shoelace.css";
+// import "@awesome.me/webawesome/dist/styles/themes/default.css";
+// import "@awesome.me/webawesome/dist/styles/themes/awesome.css";
+
+import "../styles/style.css";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -72,16 +73,15 @@ interface DynamicObject {
 export class Teleprompter {
   static readonly MAX_PREVIEW_WIDTH = 300;
   static readonly MAX_PREVIEW_HEIGHT = 450;
-  btnNew: SlButton;
-  btnPop: SlButton;
-  btnMessage: SlButton;
+  btnNew: WaButton;
+  btnPop: WaButton;
+  btnMessage: WaButton;
   quill: Quill;
-  rngSpeed: SlRange;
-  rngScale: SlRange;
-  drpDocuments: SlDropdown;
-  mnuDocuments: SlMenu;
-  dlgSave: SlDialog;
-  dlgDelete: SlDialog;
+  rngSpeed: WaSlider;
+  rngScale: WaSlider;
+  drpDocuments: WaDropdown;
+  dlgSave: WaDialog;
+  dlgDelete: WaDialog;
   tpClockControl: TPClockControl;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
@@ -104,7 +104,6 @@ export class Teleprompter {
     this.rngScale = document.querySelector("#rngScale")!;
     this.controls = document.querySelector("#controls")!;
     this.drpDocuments = document.querySelector("#drpDocuments")!;
-    this.mnuDocuments = document.querySelector("#mnuDocuments")!;
     this.dlgSave = document.querySelector("#dlgRename")!;
     this.dlgDelete = document.querySelector("#dlgDelete")!;
     this.tpClockControl = document.querySelector("#tpClockControl")!;
@@ -151,7 +150,7 @@ export class Teleprompter {
       y: 100,
     };
     this.drpDocuments.addEventListener(
-      "sl-select",
+      "wa-select",
       this.listenDropSelect.bind(this),
     );
     this.drpDocuments.addEventListener(
@@ -159,36 +158,37 @@ export class Teleprompter {
       this.listenDropClick.bind(this),
     );
 
-    const btnSave = <SlButton> this.dlgSave.querySelector(
-      "sl-button[name=save]",
-    );
-    const btnCancel = <SlButton> this.dlgSave.querySelector(
-      "sl-button[name=cancel]",
-    );
-    btnCancel.addEventListener("click", () => this.dlgSave.hide());
+    const btnSave: WaButton = this.dlgSave.querySelector(
+      "wa-button[name=save]",
+    )!;
+    const btnCancel: WaButton = this.dlgSave.querySelector(
+      "wa-button[name=cancel]",
+    )!;
+    btnCancel.addEventListener("click", () => this.dlgSave.open = false);
     btnSave.addEventListener("click", () => {
-      const input = <SlInput> this.dlgSave.querySelector("sl-input");
+      const input: WaInput = this.dlgSave.querySelector("wa-input")!;
       const hidden = <HTMLInputElement> this.dlgSave.querySelector(
         "input",
-      );
-      this.nameSave(hidden.value, input.value);
-      this.dlgSave.hide();
+      )!;
+      // TODO: Have a better default value for below.
+      this.nameSave(hidden.value, input.value || "");
+      this.dlgSave.open = false;
     });
 
-    const btnDelete = <SlButton> this.dlgDelete.querySelector(
-      "sl-button[name=delete]",
-    );
-    const btnDelCancel = <SlButton> this.dlgDelete.querySelector(
-      "sl-button[name=cancel]",
-    );
-    btnDelCancel.addEventListener("click", () => this.dlgDelete.hide());
+    const btnDelete: WaButton = this.dlgDelete.querySelector(
+      "wa-button[name=delete]",
+    )!;
+    const btnDelCancel: WaButton = this.dlgDelete.querySelector(
+      "wa-button[name=cancel]",
+    )!;
+    btnDelCancel.addEventListener("click", () => this.dlgDelete.open = false);
     btnDelete.addEventListener("click", () => {
       const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
         "input",
       );
       const docName = hidden.value;
       this.docDelete(docName);
-      this.dlgDelete.hide();
+      this.dlgDelete.open = false;
     });
 
     this.quill = new Quill("#editor", options);
@@ -253,15 +253,15 @@ export class Teleprompter {
   }
 
   listenDropClick(e: PointerEvent) {
-    if (!(e.target instanceof SlMenuItem)) {
-      const icon = <SlIconButton> e.target;
-      const menuItem = <SlMenuItem> icon.closest("sl-menu-item");
+    if (!(e.target instanceof WaDropdownItem)) {
+      const icon = <WaIcon> e.target;
+      const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
       switch (icon.name) {
         case "pencil":
           this.nameEdit(menuItem);
           break;
         case "trash": {
-          this.dlgDelete.show();
+          this.dlgDelete.open = false;
           const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
             "input",
           );
@@ -282,11 +282,11 @@ export class Teleprompter {
     }
   }
 
-  nameEdit(mi: SlMenuItem) {
+  nameEdit(mi: WaDropdownItem) {
     // make a popup
-    this.dlgSave.show();
-    const input = <SlInput> this.dlgSave.querySelector("sl-input");
-    const hidden = <HTMLInputElement> this.dlgSave.querySelector("input");
+    this.dlgSave.open = true;
+    const input: WaInput = this.dlgSave.querySelector("wa-input")!;
+    const hidden: HTMLInputElement = this.dlgSave.querySelector("input")!;
     hidden.value = mi.value;
     input.value = mi.value;
     input.select();
@@ -299,7 +299,7 @@ export class Teleprompter {
       this.currentDocument = newName;
     }
     const items = Array.from(
-      this.drpDocuments.querySelectorAll("sl-menu-item"),
+      this.drpDocuments.querySelectorAll("wa-dropdown-item"),
     );
     const mi = items.find((e) => e.value === previousName);
     if (!mi) {
@@ -322,7 +322,7 @@ export class Teleprompter {
 
   nameDelete(docName: string) {
     const items = Array.from(
-      this.drpDocuments.querySelectorAll("sl-menu-item"),
+      this.drpDocuments.querySelectorAll("wa-dropdown-item"),
     );
     const mi = items.find((e) => e.value === docName);
     if (!mi) {
@@ -341,19 +341,19 @@ export class Teleprompter {
     this.saveDB();
   }
 
-  listenDropSelect(_e: SlSelectEvent) {
+  listenDropSelect(_e: Event) {
   }
 
   addMenuItem(docName: string) {
-    const mnuItem = new SlMenuItem();
+    const mnuItem = new WaDropdownItem();
 
     mnuItem.innerHTML = `${docName}
-      <sl-icon-button slot="suffix" name="pencil" label="Edit"></sl-icon-button>
-      <sl-icon-button slot="suffix" name="trash" label="Delete"></sl-icon-button>
+      <wa-icon slot="suffix" name="pencil" label="Edit"></wa-icon>
+      <wa-icon slot="suffix" name="trash" label="Delete"></wa-icon>
     `;
-    const m = <SlMenuItem> mnuItem.cloneNode(true);
+    const m = <WaDropdownItem> mnuItem.cloneNode(true);
     m.value = docName;
-    this.mnuDocuments.appendChild(m);
+    this.drpDocuments.appendChild(m);
   }
 
   listenSpeedWheel(e: WheelEvent) {
@@ -410,12 +410,12 @@ export class Teleprompter {
   listenMessage() {
     // TODO: make this check in the constructor or something? Otherwise I have to keep checking this.
     if (!this.viewerWindow) return;
-    const txtMessage = <SlInput> document.querySelector("#txtMessage");
+    const txtMessage: WaInput = document.querySelector("#txtMessage")!;
     if (!txtMessage) {
       throw new Error("No Message input found.");
     }
     console.log(txtMessage.value);
-    this.viewerWindow.viewer.setMessage(txtMessage.value);
+    this.viewerWindow.viewer.setMessage(txtMessage.value || "");
   }
 
   updateMain() {

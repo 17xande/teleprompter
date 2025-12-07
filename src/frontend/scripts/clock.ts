@@ -1,4 +1,5 @@
-import { SlButton, SlInput } from "@shoelace-style/shoelace";
+import WaButton from "@awesome.me/webawesome/button";
+import WaInput from "@awesome.me/webawesome/input";
 
 interface ResetEvent extends CustomEvent {
   detail: {
@@ -13,12 +14,12 @@ interface ResetEvent extends CustomEvent {
  * <tp-clock-control id="countdowncontrol" countdown="00:00:00"></tp-clock-control>
  */
 class TPClockControl extends HTMLElement {
-  inHour: SlInput;
-  inMinute: SlInput;
-  inSecond: SlInput;
-  btnStart: SlButton;
-  btnStop: SlButton;
-  btnReset: SlButton;
+  inHour: WaInput;
+  inMinute: WaInput;
+  inSecond: WaInput;
+  btnStart: WaButton;
+  btnStop: WaButton;
+  btnReset: WaButton;
   countdown: TPClock;
   // TODO: I think it's best for this component to not be aware of various countdowns.
   // Rather, it should issue an event, which the other clocks can subscribe to.
@@ -43,13 +44,13 @@ class TPClockControl extends HTMLElement {
     this.innerHTML = `
     <h3>Timer Control</h3>
     <div class="wrapper">
-    <sl-input id="inHour" type="number" value="00"></sl-input><span>:</span>
-    <sl-input id="inMinute" type="number" value="00"></sl-input><span>:</span>
-    <sl-input id="inSecond" type="number" value="00"></sl-input>
+    <wa-input id="inHour" type="number" value="00"></wa-input><span>:</span>
+    <wa-input id="inMinute" type="number" value="00"></wa-input><span>:</span>
+    <wa-input id="inSecond" type="number" value="00"></wa-input>
     </div>
-		<sl-button id="btnCountdownReset">Reset</sl-button>
-		<sl-button id="btnCountdownStart">Start</sl-button>
-		<sl-button id="btnCountdownStop">Stop</sl-button>
+		<wa-button id="btnCountdownReset">Reset</wa-button>
+		<wa-button id="btnCountdownStart">Start</wa-button>
+		<wa-button id="btnCountdownStop">Stop</wa-button>
 		<time is="tp-clock" id="timeCountdown" type="timer" timer="00:00:00"></time>
 `;
 

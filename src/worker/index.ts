@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono } from "npm:hono";
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 

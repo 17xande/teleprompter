@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="sl-theme-dark">
+<html lang="en" class="wa-theme-shoelace wa-palette-shoelace wa-brand-blue wa-dark">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Teleprompter</title>
-  <link href="/styles/style.css" rel="stylesheet">
-  <script type="module" defer src="/scripts/app.js"></script>
+  <script type="module" defer src="/scripts/app.ts"></script>
 </head>
 
 <body>
@@ -16,13 +15,11 @@
     </div>
   </main>
   <aside id="controls">
-    <sl-button id="btnNew">New</sl-button>
-    <sl-dropdown id="drpDocuments">
-      <sl-button slot="trigger" caret>Documents</sl-button>
-      <sl-menu id="mnuDocuments">
-      </sl-menu>
-    </sl-dropdown>
-    <sl-button id="btnPop">Popup</sl-button>
+    <wa-button id="btnNew">New</wa-button>
+    <wa-dropdown id="drpDocuments">
+      <wa-button slot="trigger" with-caret>Documents</wa-button>
+    </wa-dropdown>
+    <wa-button id="btnPop">Popup</wa-button>
 
     <!-- Preview component -->
     <div id="divPreview">
@@ -32,32 +29,30 @@
       </div>
     </div>
 
-    <sl-range id="rngSpeed" label="Speed" help-text="Controls the scroll speed" min="-500" , max="500" , step="1"
-      value="0">0pps</sl-range>
-    <sl-range id="rngScale" label="Scale" help-text="Controls the Text Scale" min="1" max="100" step="0.01"
-      value="1"></sl-range>
+    <wa-slider id="rngSpeed" label="Speed" min="0" max="500" step="1" value="0"></wa-slider>
+    <wa-slider id="rngScale" label="Scale" min="1" max="100" step="0.01" value="1"></wa-slider>
     <tp-clock-control id="tpClockControl" countdown="00:00:00"></tp-clock-control>
     <time is="tp-clock" type="clock"></time>
-    <sl-input id="txtMessage" placeholder="Message" label="Message">
-      <sl-icon name="chat" slot="prefix"></sl-icon>
-    </sl-input>
-    <sl-button id="btnMessage">
-      <sl-icon name="chat" slot="prefix"></sl-icon>
+    <wa-input id="txtMessage" placeholder="Message" label="Message">
+      <wa-icon name="chat" slot="prefix"></wa-icon>
+    </wa-input>
+    <wa-button id="btnMessage">
+      <wa-icon name="chat" slot="prefix"></wa-icon>
       Send Message
-    </sl-button>
+    </wa-button>
   </aside>
-  <sl-dialog id="dlgRename" label="Rename Document" class="dialog-focus">
-    <sl-input autofocus></sl-input>
+  <wa-dialog id="dlgRename" label="Rename Document" class="dialog-focus">
+    <wa-input autofocus></wa-input>
     <input type="hidden"></input>
-    <sl-button name="save" slot="footer" variant="primary">Save</sl-button>
-    <sl-button name="cancel" slot="footer">Cancel</sl-button>
-  </sl-dialog>
-  <sl-dialog id="dlgDelete" , label="Delete Document" class="dialog-focus">
+    <wa-button name="save" slot="footer" variant="primary">Save</wa-button>
+    <wa-button name="cancel" slot="footer">Cancel</wa-button>
+  </wa-dialog>
+  <wa-dialog id="dlgDelete" label="Delete Document" class="dialog-focus">
     Are you sure you want to delete document
-    <sl-button name="delete" slot="footer" variant="primary">Delete</sl-button>
-    <sl-button name="cancel" slot="footer">Cancel</sl-button>
+    <wa-button name="delete" slot="footer" variant="primary">Delete</wa-button>
+    <wa-button name="cancel" slot="footer">Cancel</wa-button>
     <input type="hidden"></input>
-  </sl-dialog>
+  </wa-dialog>
 </body>
 
 </html>

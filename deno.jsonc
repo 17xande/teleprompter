@@ -1,0 +1,36 @@
+{
+  "version": "0.0.1",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "esnext",
+      "dom.iterable",
+      "deno.ns"
+    ],
+    "types": [
+      "./src/frontend/scripts/globals.d.ts"
+    ]
+  },
+  "exclude": [
+    "public/"
+  ],
+  "include": [
+    "src/frontend/scripts"
+  ],
+  "tasks": {
+    "wrangler": "deno run --allow-env --allow-run npm:wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindigs",
+    "dev2": "deno run bundle & deno run server",
+    "bundle-script": "deno run --unstable-bundle bundle.ts",
+    "bundle": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
+    "server": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist"
+  },
+  "imports": {
+    "@awesome.me/webawesome": "npm:@awesome.me/webawesome@^3.0.0",
+    "hono": "npm:hono@^4.10.7",
+    "quill": "npm:quill@^2.0.3",
+    "quill/modules/toolbar": "npm:quill@^2.0.3/modules/toolbar.js",
+    "quill/dist/quill.snow.css": "npm:quill@^2.0.3/dist/quill.snow.css"
+  }
+}

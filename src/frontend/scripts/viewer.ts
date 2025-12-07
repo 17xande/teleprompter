@@ -2,6 +2,9 @@ import _Quill from "quill";
 import { registerClockComponent } from "./clock.ts";
 import { TPClock, TPClockControl } from "./clock.ts";
 import { Teleprompter } from "./teleprompter.ts";
+import "quill/dist/quill.snow.css";
+import "@awesome.me/webawesome/dist/styles/webawesome.css";
+import "../styles/pop.css"
 
 export class Viewer {
   controller: Teleprompter | null = null;
