@@ -359,17 +359,17 @@ export class Teleprompter {
   listenSpeedWheel(e: WheelEvent) {
     e.preventDefault();
 
-    this.rngSpeed.value += e.deltaY;
-    this.viewerWindow?.viewer.setSpeed(this.rngSpeed.value);
+    this.rngSpeed.value += -e.deltaY;
+    this.viewerWindow?.viewer.setSpeed(-this.rngSpeed.value);
   }
 
   listenRangeSpeed() {
-    this.viewerWindow?.viewer.setSpeed(this.rngSpeed.value);
+    this.viewerWindow?.viewer.setSpeed(-this.rngSpeed.value);
   }
 
   listenScaleWheel(e: WheelEvent) {
     e.preventDefault();
-    const scale = this.rngScale.value += e.deltaY / 30;
+    const scale = this.rngScale.value += -e.deltaY / 30;
 
     this.rngScale.value = scale;
     this.viewerWindow?.viewer.setTextScale(scale / 10);

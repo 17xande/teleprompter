@@ -29,8 +29,17 @@
       </div>
     </div>
 
-    <wa-slider id="rngSpeed" label="Speed" min="0" max="500" step="1" value="0"></wa-slider>
-    <wa-slider id="rngScale" label="Scale" min="1" max="100" step="0.01" value="1"></wa-slider>
+    <wa-slider id="rngSpeed" label="Scroll Speed" min="-500" max="500" step="0.1" value="0" orientation="vertical"
+      indicator-offset="0" with-tooltip>
+      <span slot="reference">Reverse</span>
+      <span slot="reference">Stop</span>
+      <span slot="reference">Forward</span>
+    </wa-slider>
+    <wa-slider id="rngScale" label="Text Scale" min="1" max="100" step="5" value="1" orientation="vertical" with-markers
+      with-tooltip>
+      <span slot="reference">Larger</span>
+      <span slot="reference">Smaller</span>
+    </wa-slider>
     <tp-clock-control id="tpClockControl" countdown="00:00:00"></tp-clock-control>
     <time is="tp-clock" type="clock"></time>
     <wa-input id="txtMessage" placeholder="Message" label="Message">
