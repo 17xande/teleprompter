@@ -1,2 +1,2 @@
 [tools]
-pnpm = "latest"
+deno = "latest"
