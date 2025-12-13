@@ -18,13 +18,11 @@
     "src/frontend/scripts"
   ],
   "tasks": {
-    "wrangler": "deno run --allow-env --allow-run npm:wrangler dev",
-    "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindigs",
-    "dev2": "deno run bundle & deno run server",
+    "dev": "deno run bundle & deno run server",
     "bundle-script": "deno run --unstable-bundle bundle.ts",
     "bundle": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
-    "server": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist"
+    "serve-http": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
+    "serve": "deno run -A --unstable-worker-options https://raw.githubusercontent.com/skymethod/denoflare/v0.7.0/cli/cli.ts serve"
   },
   "imports": {
     "@awesome.me/webawesome": "npm:@awesome.me/webawesome@^3.0.0",
