@@ -4,7 +4,16 @@
   "scripts": {
     "dev": {
       "path": "./src/worker/index.ts",
-      "bindings": {},
+      "bindings": {
+        "assets": {
+          "directory": "./dist/",
+          "binding": "ASSETS",
+          "value": "./dist/",
+        },
+        "flags": {
+          "value": "emulatePages,listDirectories"
+        },
+      },
       "localPort": 8787,
     },
   },

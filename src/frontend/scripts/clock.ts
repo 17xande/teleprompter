@@ -1,5 +1,5 @@
-import WaButton from "@awesome.me/webawesome/button";
-import WaInput from "@awesome.me/webawesome/input";
+import WaButton from "@awesome.me/webawesome/dist/components/button/button.js";
+import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
 
 interface ResetEvent extends CustomEvent {
   detail: {
