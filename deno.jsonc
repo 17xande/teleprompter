@@ -18,10 +18,17 @@
     "src/frontend/scripts"
   ],
   "tasks": {
-    "dev": "deno run bundle & deno run server",
+    "build": "deno bundle src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
+    "dev": "deno run bundle & deno run start",
     "bundle-script": "deno run --unstable-bundle bundle.ts",
     "bundle": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
-    "serve-http": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
+    "start": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
+  },
+  "permissions": {
+    "net-read": {
+      "net": true,
+      "read": true,
+    }
   },
   "imports": {
     "@awesome.me/webawesome": "npm:@awesome.me/webawesome@^3.0.0",
