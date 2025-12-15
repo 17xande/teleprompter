@@ -32,7 +32,6 @@
   },
   "imports": {
     "@awesome.me/webawesome": "npm:@awesome.me/webawesome@^3.0.0",
-    "hono": "npm:hono@^4.10.7",
     "quill": "npm:quill@^2.0.3",
     "quill/modules/toolbar": "npm:quill@^2.0.3/modules/toolbar.js",
     "quill/dist/quill.snow.css": "npm:quill@^2.0.3/dist/quill.snow.css"
