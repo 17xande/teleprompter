@@ -6,6 +6,7 @@
   --border-width: 1px;
   --border-color: hsl(240, 5.9%, 11%);
 }
+
 html {
   /* color: white; */
   /* background-color: var(--background-color); */
@@ -14,16 +15,10 @@ html {
 }
 
 body {
-  font-family: var(--sl-font-mono);
-  display: grid;
-  grid-template-columns: 1fr var(--sidebar-width);
-  height: 98vh;
-}
-
-@property --rotation {
-  syntax: "<angle>";
-  inherits: true;
-  initial-value: 0;
+  /* font-family: var(--sl-font-mono); */
+  /* display: grid; */
+  /* grid-template-columns: 1fr var(--sidebar-width); */
+  /* height: 98vh; */
 }
 
 @property --textScale {
@@ -32,21 +27,14 @@ body {
   initial-value: 0;
 }
 
-.square {
-  background-color: orange;
-  height: 50px;
-  width: 50px;
-  rotate: var(--rotation);
-}
-
-#controls {
-  position: sticky;
-  height: 98vh;
-}
-
-#mainEditor {
-  height: 92vh;
-}
+/* #controls { */
+/*   position: sticky; */
+/*   height: 98vh; */
+/* } */
+/**/
+/* #mainEditor { */
+/*   height: 92vh; */
+/* } */
 
 #ifrmPreview {
   border: none;
@@ -99,7 +87,7 @@ tp-clock-control {
   .wrapper {
     display: flex;
 
-    sl-input {
+    wa-input {
       width: 5rem;
     }
   }

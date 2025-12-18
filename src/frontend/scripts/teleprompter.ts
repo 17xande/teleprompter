@@ -8,6 +8,7 @@ import {
 } from "./clock.ts";
 
 import { Viewer } from "./viewer.ts";
+import WaSplitPanel from "@awesome.me/webawesome/dist/components/split-panel/split-panel.js";
 import WaButton from "@awesome.me/webawesome/dist/components/button/button.js";
 import WaDialog from "@awesome.me/webawesome/dist/components/dialog/dialog.js";
 import WaDropdown from "@awesome.me/webawesome/dist/components/dropdown/dropdown.js";
@@ -16,8 +17,10 @@ import WaIcon from "@awesome.me/webawesome/dist/components/icon/icon.js";
 import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
 import WaSlider from "@awesome.me/webawesome/dist/components/slider/slider.js";
 
-// Prevent treeshaking
-const check = WaButton && WaDialog && WaDropdown && WaDropdownItem && WaIcon &&
+// Prevent treeshaking so that these elements are initialised.
+// TODO: Find a better way to do this.
+const check = WaSplitPanel && WaButton && WaDialog && WaDropdown &&
+  WaDropdownItem && WaIcon &&
   WaInput && WaSlider;
 console.log(check);
 
@@ -73,6 +76,7 @@ interface DynamicObject {
 export class Teleprompter {
   static readonly MAX_PREVIEW_WIDTH = 300;
   static readonly MAX_PREVIEW_HEIGHT = 450;
+  splitPanel: WaSplitPanel;
   btnNew: WaButton;
   btnPop: WaButton;
   btnMessage: WaButton;
@@ -97,6 +101,7 @@ export class Teleprompter {
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
+    this.splitPanel = document.querySelector("wa-split-panel")!;
     this.btnPop = document.querySelector("#btnPop")!;
     this.btnMessage = document.querySelector("#btnMessage")!;
     this.btnNew = document.querySelector("#btnNew")!;
