@@ -18,7 +18,7 @@
     "src/frontend/scripts"
   ],
   "tasks": {
-    "build": "deno bundle src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
+    "build": "deno bundle src/frontend/index.html src/frontend/html/pop.html --platform browser --sourcemap --outdir dist",
     "dev": "deno run bundle & deno run start",
     "bundle-script": "deno run --unstable-bundle bundle.ts",
     "bundle": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",

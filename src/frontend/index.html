@@ -15,41 +15,51 @@
       <div id="editor">
       </div>
     </div>
-    <div slot="end" id="controls">
-      <wa-button id="btnNew">New</wa-button>
-      <wa-dropdown id="drpDocuments">
-        <wa-button slot="trigger" with-caret>Documents</wa-button>
-      </wa-dropdown>
-      <wa-button id="btnPop">Popup</wa-button>
-
+    <div slot="end" id="controls" class="wa-stack">
+      <fieldset class="wa-cluster">
+        <legend>Documents</legend>
+        <wa-button id="btnNew">New</wa-button>
+        <wa-dropdown id="drpDocuments">
+          <wa-button slot="trigger" with-caret>Documents</wa-button>
+        </wa-dropdown>
+        <wa-button id="btnPop">Popup</wa-button>
+      </fieldset>
       <!-- Preview component -->
-      <div id="divPreview">
-        <h3>Preview</h3>
+      <fieldset id="divPreview">
+        <legend>Preview</legend>
         <div id="divIFrameContainer">
           <iframe id="ifrmPreview" src="/html/pop.html"></iframe>
         </div>
-      </div>
+      </fieldset>
+      <fieldset class="wa-cluster divSliders">
+        <legend>Controls</legend>
+        <wa-slider id="rngSpeed" label="Scroll Speed" min="-500" max="500" step="0.1" value="0" orientation="vertical"
+          indicator-offset="0" with-tooltip>
+          <span slot="reference">Reverse</span>
+          <span slot="reference">Stop</span>
+          <span slot="reference">Forward</span>
+        </wa-slider>
+        <wa-slider id="rngScale" label="Text Scale" min="1" max="100" step="5" value="1" orientation="vertical"
+          with-markers with-tooltip>
+          <span slot="reference">Larger</span>
+          <span slot="reference">Smaller</span>
+        </wa-slider>
+      </fieldset>
+      <fieldset>
+        <legend>Clocks</legend>
+        <tp-clock-control id="tpClockControl" countdown="00:00:00"></tp-clock-control>
+        <time is="tp-clock" type="clock"></time>
+      </fieldset>
+      <fieldset>
+        <wa-input id="txtMessage" placeholder="Message" label="Message">
+          <wa-icon name="chat" slot="prefix"></wa-icon>
+        </wa-input>
+        <wa-button id="btnMessage">
+          <wa-icon name="chat" slot="prefix"></wa-icon>
+          Send Message
+        </wa-button>
+      </fieldset>
 
-      <wa-slider id="rngSpeed" label="Scroll Speed" min="-500" max="500" step="0.1" value="0" orientation="vertical"
-        indicator-offset="0" with-tooltip>
-        <span slot="reference">Reverse</span>
-        <span slot="reference">Stop</span>
-        <span slot="reference">Forward</span>
-      </wa-slider>
-      <wa-slider id="rngScale" label="Text Scale" min="1" max="100" step="5" value="1" orientation="vertical"
-        with-markers with-tooltip>
-        <span slot="reference">Larger</span>
-        <span slot="reference">Smaller</span>
-      </wa-slider>
-      <tp-clock-control id="tpClockControl" countdown="00:00:00"></tp-clock-control>
-      <time is="tp-clock" type="clock"></time>
-      <wa-input id="txtMessage" placeholder="Message" label="Message">
-        <wa-icon name="chat" slot="prefix"></wa-icon>
-      </wa-input>
-      <wa-button id="btnMessage">
-        <wa-icon name="chat" slot="prefix"></wa-icon>
-        Send Message
-      </wa-button>
     </div>
   </wa-split-panel>
   <wa-dialog id="dlgRename" label="Rename Document" class="dialog-focus">

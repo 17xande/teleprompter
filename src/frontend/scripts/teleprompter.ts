@@ -28,6 +28,7 @@ console.log(check);
 import "quill/dist/quill.snow.css";
 // import "@awesome.me/webawesome/dist/styles/webawesome.css";
 import "@awesome.me/webawesome/dist/styles/themes/shoelace.css";
+import "@awesome.me/webawesome/dist/styles/utilities.css";
 // import "@awesome.me/webawesome/dist/styles/themes/default.css";
 // import "@awesome.me/webawesome/dist/styles/themes/awesome.css";
 

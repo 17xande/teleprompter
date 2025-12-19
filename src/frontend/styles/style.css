@@ -14,13 +14,6 @@ html {
   font-optical-sizing: auto;
 }
 
-body {
-  /* font-family: var(--sl-font-mono); */
-  /* display: grid; */
-  /* grid-template-columns: 1fr var(--sidebar-width); */
-  /* height: 98vh; */
-}
-
 @property --textScale {
   syntax: "number";
   inherits: false;
