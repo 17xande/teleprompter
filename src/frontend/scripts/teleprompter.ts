@@ -12,6 +12,7 @@ import WaSplitPanel from "@awesome.me/webawesome/dist/components/split-panel/spl
 import WaButton from "@awesome.me/webawesome/dist/components/button/button.js";
 import WaDialog from "@awesome.me/webawesome/dist/components/dialog/dialog.js";
 import WaDropdown from "@awesome.me/webawesome/dist/components/dropdown/dropdown.js";
+// import type { WaSelectEvent } from "@awesome.me/webawesome/dist/events/select.d.ts";
 import WaDropdownItem from "@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js";
 import WaIcon from "@awesome.me/webawesome/dist/components/icon/icon.js";
 import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
@@ -347,17 +348,21 @@ export class Teleprompter {
     this.saveDB();
   }
 
-  listenDropSelect(_e: Event) {
+  listenDropSelect(e: Event) {
+    console.log(e);
   }
 
   addMenuItem(docName: string) {
     const mnuItem = new WaDropdownItem();
 
     mnuItem.innerHTML = `${docName}
+      <wa-dropdown-item slot="submenu" value="Open">Open
+        <wa-icon slot="icon" name="folder-open" label="Open"></wa-icon>
+      </wa-dropdown-item>
       <wa-dropdown-item slot="submenu" value="edit">Edit
         <wa-icon slot="icon" name="pencil" label="Edit"></wa-icon>
       </wa-dropdown-item>
-      <wa-dropdown-item slot="submenu" value="delete">Delete
+      <wa-dropdown-item slot="submenu" value="delete" variant="danger">Delete
         <wa-icon slot="icon" name="trash" label="Delete"></wa-icon>
       </wa-dropdown-item>
     `;

@@ -49,7 +49,7 @@ class TPClockControl extends HTMLElement {
     <wa-input id="inSecond" type="number" value="00"></wa-input>
     </div>
 		<wa-button id="btnCountdownReset" value="reset" title="Reset">
-    <wa-icon name="rotate-left" label="Reset"></wa-icon>
+    <wa-icon name="clock-rotate-left" label="Reset"></wa-icon>
     </wa-button>
 		<wa-button id="btnCountdownStart" value="start" title="Start">
     <wa-icon name="play" label="Start"></wa-icon>
