@@ -354,8 +354,12 @@ export class Teleprompter {
     const mnuItem = new WaDropdownItem();
 
     mnuItem.innerHTML = `${docName}
-      <wa-icon slot="suffix" name="pencil" label="Edit"></wa-icon>
-      <wa-icon slot="suffix" name="trash" label="Delete"></wa-icon>
+      <wa-dropdown-item slot="submenu" value="edit">Edit
+        <wa-icon slot="icon" name="pencil" label="Edit"></wa-icon>
+      </wa-dropdown-item>
+      <wa-dropdown-item slot="submenu" value="delete">Delete
+        <wa-icon slot="icon" name="trash" label="Delete"></wa-icon>
+      </wa-dropdown-item>
     `;
     const m = <WaDropdownItem> mnuItem.cloneNode(true);
     m.value = docName;

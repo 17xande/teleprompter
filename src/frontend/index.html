@@ -18,11 +18,17 @@
     <div slot="end" id="controls" class="wa-stack">
       <fieldset class="wa-cluster">
         <legend>Documents</legend>
-        <wa-button id="btnNew">New</wa-button>
+        <wa-button id="btnNew">New
+          <wa-icon slot="start" name="file-circle-plus"></wa-icon>
+        </wa-button>
         <wa-dropdown id="drpDocuments">
-          <wa-button slot="trigger" with-caret>Documents</wa-button>
+          <wa-button slot="trigger" with-caret>Documents
+            <wa-icon slot="start" name="file"></wa-icon>
+          </wa-button>
         </wa-dropdown>
-        <wa-button id="btnPop">Popup</wa-button>
+        <wa-button id="btnPop">Popup
+          <wa-icon slot="end" name="arrow-right-from-bracket"></wa-icon>
+        </wa-button>
       </fieldset>
       <!-- Preview component -->
       <fieldset id="divPreview">
@@ -52,10 +58,10 @@
       </fieldset>
       <fieldset>
         <wa-input id="txtMessage" placeholder="Message" label="Message">
-          <wa-icon name="chat" slot="prefix"></wa-icon>
+          <wa-icon name="message" slot="end"></wa-icon>
         </wa-input>
         <wa-button id="btnMessage">
-          <wa-icon name="chat" slot="prefix"></wa-icon>
+          <wa-icon name="message" slot="end"></wa-icon>
           Send Message
         </wa-button>
       </fieldset>

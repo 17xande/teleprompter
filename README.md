@@ -1,7 +1,9 @@
 # teleprompter
+
 An open source teleprompter running in your browser. What a time to be alive.
 
-### TODO:
+## TODO
+
 - [x] Sticky clocks
 - [x] Text scale adjustment
 - [x] Keep pop content when refreshing pop
@@ -22,7 +24,8 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Omit hours counter from countdown clock
 - [ ] Add preview pane.
 
-### Future
+## Future
+
 - [ ] Make interface pretty.
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)
 - [ ] Keep clocks running when refreshing popup.
@@ -35,12 +38,14 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [ ] Prompter preview render
 - [ ] Rename project to "Prompter"?
 - [ ] Prompter themes/layouts (CSS based)
-- [ ] User accounts 
-- [ ] Saved documents 
-- [ ] Export document 
-- [ ] Import document 
-- [ ] Game controller 
+- [ ] User accounts
+- [ ] Saved documents
+- [ ] Export document
+- [ ] Import document
+- [ ] Game controller
 
-### Thoughts:
-#### Rendering
+## Thoughts
+
+### Rendering
+
 Should I render the prompter in a canvas and then stream it to the prompter? Might have to do this anyway for the BMD integration. #future
