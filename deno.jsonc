@@ -18,11 +18,13 @@
     "src/frontend/scripts"
   ],
   "tasks": {
-    "build": "deno bundle src/frontend/index.html src/frontend/html/pop.html --platform browser --sourcemap --outdir dist",
-    "dev": "deno run bundle & deno run start",
-    "bundle-script": "deno run --unstable-bundle bundle.ts",
-    "bundle": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
+    "dev": "deno task bundle-watch & deno task start",
+    "build": "deno task clean && deno task bundle",
     "start": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
+    "clean": "rm -r dist/* 2> /dev/null",
+    "bundle": "deno bundle src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
+    "bundle-script": "deno task --unstable-bundle bundle.ts",
+    "bundle-watch": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
   },
   "permissions": {
     "net-read": {
