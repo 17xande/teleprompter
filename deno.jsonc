@@ -21,7 +21,7 @@
     "dev": "deno task bundle-watch & deno task start",
     "build": "deno task bundle",
     "start": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
-    "clean": "rm -r dist/* 2> /dev/null",
+    "clean": "rm -r dist/*",
     "bundle": "deno bundle src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",
     "bundle-script": "deno task --unstable-bundle bundle.ts",
     "bundle-watch": "deno bundle --watch src/frontend/index.html src/frontend/html/pop.html --code-splitting --platform browser --sourcemap --outdir dist",

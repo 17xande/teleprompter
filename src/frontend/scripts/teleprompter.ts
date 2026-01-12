@@ -12,7 +12,6 @@ import WaSplitPanel from "@awesome.me/webawesome/dist/components/split-panel/spl
 import WaButton from "@awesome.me/webawesome/dist/components/button/button.js";
 import WaDialog from "@awesome.me/webawesome/dist/components/dialog/dialog.js";
 import WaDropdown from "@awesome.me/webawesome/dist/components/dropdown/dropdown.js";
-// import type { WaSelectEvent } from "@awesome.me/webawesome/dist/events/select.d.ts";
 import WaDropdownItem from "@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js";
 import WaIcon from "@awesome.me/webawesome/dist/components/icon/icon.js";
 import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
@@ -34,6 +33,7 @@ import "@awesome.me/webawesome/dist/styles/utilities.css";
 // import "@awesome.me/webawesome/dist/styles/themes/awesome.css";
 
 import "../styles/style.css";
+import { DocControls } from "./doc.ts";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -71,23 +71,15 @@ type PopupDimensions = {
   y: number;
 };
 
-interface DynamicObject {
-  [key: string]: string;
-}
-
 export class Teleprompter {
   static readonly MAX_PREVIEW_WIDTH = 300;
   static readonly MAX_PREVIEW_HEIGHT = 450;
+  docControls: DocControls;
   splitPanel: WaSplitPanel;
-  btnNew: WaButton;
-  btnPop: WaButton;
   btnMessage: WaButton;
   quill: Quill;
   rngSpeed: WaSlider;
   rngScale: WaSlider;
-  drpDocuments: WaDropdown;
-  dlgSave: WaDialog;
-  dlgDelete: WaDialog;
   tpClockControl: TPClockControl;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
@@ -96,29 +88,24 @@ export class Teleprompter {
   viewerScrollY = 0;
   popDimensions: PopupDimensions;
   controls: HTMLDivElement;
-  currentDocument: string;
-  documents: DynamicObject;
   editingName: string;
+  btnPop: WaButton;
 
   constructor() {
     registerClockComponent();
     registerClockControlComponent();
-    this.splitPanel = document.querySelector("wa-split-panel")!;
+    this.docControls = new DocControls();
     this.btnPop = document.querySelector("#btnPop")!;
+    this.splitPanel = document.querySelector("wa-split-panel")!;
     this.btnMessage = document.querySelector("#btnMessage")!;
-    this.btnNew = document.querySelector("#btnNew")!;
     this.rngSpeed = document.querySelector("#rngSpeed")!;
     this.rngScale = document.querySelector("#rngScale")!;
     this.controls = document.querySelector("#controls")!;
-    this.drpDocuments = document.querySelector("#drpDocuments")!;
-    this.dlgSave = document.querySelector("#dlgRename")!;
-    this.dlgDelete = document.querySelector("#dlgDelete")!;
     this.tpClockControl = document.querySelector("#tpClockControl")!;
 
     this.ifrmPreview = <HTMLIFrameElement> document.querySelector(
       "#ifrmPreview",
     );
-    this.btnNew.addEventListener("click", this.newDocument.bind(this));
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.rngSpeed.addEventListener("wheel", this.listenSpeedWheel.bind(this), {
@@ -156,68 +143,18 @@ export class Teleprompter {
       x: 100,
       y: 100,
     };
-    this.drpDocuments.addEventListener(
-      "wa-select",
-      this.listenDropSelect.bind(this),
-    );
-    this.drpDocuments.addEventListener(
-      "click",
-      this.listenDropClick.bind(this),
-    );
-
-    const btnSave: WaButton = this.dlgSave.querySelector(
-      "wa-button[name=save]",
-    )!;
-    const btnCancel: WaButton = this.dlgSave.querySelector(
-      "wa-button[name=cancel]",
-    )!;
-    btnCancel.addEventListener("click", () => this.dlgSave.open = false);
-    btnSave.addEventListener("click", () => {
-      const input: WaInput = this.dlgSave.querySelector("wa-input")!;
-      const hidden = <HTMLInputElement> this.dlgSave.querySelector(
-        "input",
-      )!;
-      // TODO: Have a better default value for below.
-      this.nameSave(hidden.value, input.value || "");
-      this.dlgSave.open = false;
-    });
-
-    const btnDelete: WaButton = this.dlgDelete.querySelector(
-      "wa-button[name=delete]",
-    )!;
-    const btnDelCancel: WaButton = this.dlgDelete.querySelector(
-      "wa-button[name=cancel]",
-    )!;
-    btnDelCancel.addEventListener("click", () => this.dlgDelete.open = false);
-    btnDelete.addEventListener("click", () => {
-      const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
-        "input",
-      );
-      const docName = hidden.value;
-      this.docDelete(docName);
-      this.dlgDelete.open = false;
-    });
 
     this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
-      this.saveDocument();
-      this.saveDB();
+      const quillContents = this.quill.getContents();
+      this.docControls.docStorage.currentDoc.content = JSON.stringify(
+        quillContents,
+      );
+      this.docControls.docStorage.save();
     });
 
-    this.currentDocument = localStorage.getItem("currentDocument") ||
-      "document";
-    this.documents = {};
-    const docs = localStorage.getItem("documents");
-    if (docs) {
-      this.documents = <DynamicObject> JSON.parse(docs);
-      for (const name of Object.keys(this.documents)) {
-        this.addMenuItem(name);
-      }
-    }
-
-    this.loadDocument(this.currentDocument, true);
-
     globalThis.addEventListener("keyup", this.listenKey.bind(this));
+
     this.ifrmPreview.addEventListener("load", () => {
       if (!this.ifrmPreview.contentWindow?.viewer) {
         throw new Error("no viewer on preview.");
@@ -232,20 +169,6 @@ export class Teleprompter {
     });
   }
 
-  loadDocument(docName: string, firstLoad = false) {
-    if (this.documents[docName]) {
-      const strDoc = this.documents[docName];
-      const parsedDoc = JSON.parse(strDoc);
-      if (parsedDoc) {
-        if (!firstLoad) {
-          this.saveDocument();
-        }
-        this.currentDocument = docName;
-        this.quill.setContents(parsedDoc);
-      }
-    }
-  }
-
   listenPop() {
     const win = globalThis.open(
       "/html/pop.html",
@@ -257,118 +180,6 @@ export class Teleprompter {
     }
 
     this.viewerWindow = win;
-  }
-
-  listenDropClick(e: PointerEvent) {
-    if (!(e.target instanceof WaDropdownItem)) {
-      const icon = <WaIcon> e.target;
-      const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
-      switch (icon.name) {
-        case "pencil":
-          this.nameEdit(menuItem);
-          break;
-        case "trash": {
-          this.dlgDelete.open = false;
-          const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
-            "input",
-          );
-          hidden.value = menuItem.value;
-          break;
-        }
-          // case "check":
-          //   this.nameSave(menuItem);
-          //   break;
-          // case "x":
-          //   this.nameEditCancel(menuItem);
-          //   break;
-      }
-      return;
-    } else {
-      const selected = e.target.value;
-      this.loadDocument(selected);
-    }
-  }
-
-  nameEdit(mi: WaDropdownItem) {
-    // make a popup
-    this.dlgSave.open = true;
-    const input: WaInput = this.dlgSave.querySelector("wa-input")!;
-    const hidden: HTMLInputElement = this.dlgSave.querySelector("input")!;
-    hidden.value = mi.value;
-    input.value = mi.value;
-    input.select();
-  }
-
-  nameSave(previousName: string, newName: string) {
-    const doc = this.documents[previousName];
-    this.documents[newName] = doc;
-    if (this.currentDocument === previousName) {
-      this.currentDocument = newName;
-    }
-    const items = Array.from(
-      this.drpDocuments.querySelectorAll("wa-dropdown-item"),
-    );
-    const mi = items.find((e) => e.value === previousName);
-    if (!mi) {
-      throw new Error("menu item does not exist");
-    }
-    this.nameDelete(previousName);
-    this.addMenuItem(newName);
-    this.saveDB();
-  }
-
-  saveDocument() {
-    const content = this.quill.getContents();
-    this.documents[this.currentDocument] = JSON.stringify(content);
-  }
-
-  saveDB() {
-    localStorage.setItem("currentDocument", this.currentDocument);
-    localStorage.setItem("documents", JSON.stringify(this.documents));
-  }
-
-  nameDelete(docName: string) {
-    const items = Array.from(
-      this.drpDocuments.querySelectorAll("wa-dropdown-item"),
-    );
-    const mi = items.find((e) => e.value === docName);
-    if (!mi) {
-      throw new Error("menu item does not exist");
-    }
-    mi.remove();
-  }
-
-  docDelete(docName: string) {
-    const doc = this.documents[docName];
-    if (!doc) {
-      throw new Error(`Document ${docName} doesn't exist`);
-    }
-    delete (this.documents[docName]);
-    this.nameDelete(docName);
-    this.saveDB();
-  }
-
-  listenDropSelect(e: Event) {
-    console.log(e);
-  }
-
-  addMenuItem(docName: string) {
-    const mnuItem = new WaDropdownItem();
-
-    mnuItem.innerHTML = `${docName}
-      <wa-dropdown-item slot="submenu" value="Open">Open
-        <wa-icon slot="icon" name="folder-open" label="Open"></wa-icon>
-      </wa-dropdown-item>
-      <wa-dropdown-item slot="submenu" value="edit">Edit
-        <wa-icon slot="icon" name="pencil" label="Edit"></wa-icon>
-      </wa-dropdown-item>
-      <wa-dropdown-item slot="submenu" value="delete" variant="danger">Delete
-        <wa-icon slot="icon" name="trash" label="Delete"></wa-icon>
-      </wa-dropdown-item>
-    `;
-    const m = <WaDropdownItem> mnuItem.cloneNode(true);
-    m.value = docName;
-    this.drpDocuments.appendChild(m);
   }
 
   listenSpeedWheel(e: WheelEvent) {
@@ -412,14 +223,6 @@ export class Teleprompter {
       default:
         // ignore for now
     }
-  }
-
-  newDocument() {
-    this.saveDB();
-    const newName = `document_${this.formatDateTime()}`;
-    this.currentDocument = newName;
-    this.addMenuItem(newName);
-    this.quill.setText("");
   }
 
   listenMessage() {
