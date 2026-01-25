@@ -38,17 +38,18 @@ export class DocStorage {
     this.setCurrent(currentDocName);
   }
 
-  setCurrent(docName: string) {
-    const doc = this.docs.get(docName);
+  setCurrent(docName: string): Doc {
+    let doc = this.docs.get(docName);
     if (!doc) {
       console.warn(
         `document ${docName} not found in storage. Creating empty document`,
       );
       this.currentDoc = new Doc(docName, "");
-      return;
+      doc = this.currentDoc;
+    } else {
+      this.currentDoc = doc;
     }
-
-    this.currentDoc = doc;
+    return doc;
   }
 
   saveDoc(doc: Doc) {
@@ -159,6 +160,7 @@ export class DocControls {
     };
   }
 
+  // loadDocument loads a document from storage, based on the document name.
   loadDocument(docName: string, firstLoad = false) {
     if (this.documents[docName]) {
       const strDoc = this.documents[docName];
