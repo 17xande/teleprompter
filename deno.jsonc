@@ -12,7 +12,7 @@
     ]
   },
   "exclude": [
-    "public/"
+    "dist"
   ],
   "include": [
     "src/frontend/scripts"
@@ -29,7 +29,7 @@
   "permissions": {
     "net-read": {
       "net": true,
-      "read": true,
+      "read": true
     }
   },
   "imports": {
