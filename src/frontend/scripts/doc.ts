@@ -3,6 +3,7 @@ import WaDropdown from "@awesome.me/webawesome/dist/components/dropdown/dropdown
 import WaDialog from "@awesome.me/webawesome/dist/components/dialog/dialog.js";
 import WaInput from "@awesome.me/webawesome/dist/components/input/input.js";
 import WaDropdownItem from "@awesome.me/webawesome/dist/components/dropdown-item/dropdown-item.js";
+import WaIcon from "@awesome.me/webawesome/dist/components/icon/icon.js";
 import type { WaSelectEvent } from "@awesome.me/webawesome";
 
 export class Doc {
@@ -18,7 +19,7 @@ export class Doc {
 export class DocStorage {
   currentDoc: Doc;
   // Use a Map for more efficient additions/deletions and less possible weirdness with objects.
-  // TODO: NO, don't use a map, maps to serialise/deserialise to/from JSON. Use an object.
+  // TODO: NO, don't use a map, serializing maps to/from JSON sucks. Use an object.
   docs: Map<string, Doc>;
 
   constructor() {
@@ -181,7 +182,7 @@ export class DocControls {
       const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
       switch (icon.name) {
         case "pencil":
-          this.nameEdit(menuItem);
+          this.editPopup(menuItem);
           break;
         case "trash": {
           this.dlgDelete.open = false;
@@ -205,7 +206,7 @@ export class DocControls {
     }
   }
 
-  nameEdit(mi: WaDropdownItem) {
+  editPopup(mi: WaDropdownItem) {
     // make a popup
     this.dlgSave.open = true;
     const input: WaInput = this.dlgSave.querySelector("wa-input")!;
@@ -216,10 +217,13 @@ export class DocControls {
   }
 
   nameSave(previousName: string, newName: string) {
-    const doc = this.documents[previousName];
-    this.documents[newName] = doc;
-    if (this.currentDocument === previousName) {
-      this.currentDocument = newName;
+    const doc = this.docStorage.docs.get(previousName);
+    if (!doc) {
+      throw new Error("can't rename document that doesn't exist?");
+    }
+    this.docStorage.docs.set(newName, doc);
+    if (this.docStorage.currentDoc.name === previousName) {
+      this.docStorage.setCurrent(newName);
     }
     const items = Array.from(
       this.drpDocuments.querySelectorAll("wa-dropdown-item"),
@@ -253,16 +257,38 @@ export class DocControls {
   }
 
   new() {
-    this.saveDB();
+    this.docStorage.save();
     const newName = `document_${this.formatDateTime()}`;
-    this.currentDocument = newName;
+    this.docStorage.setCurrent(newName);
     this.addMenuItem(newName);
-    this.quill.setText("");
+    const newEvent = new CustomEvent("new", {
+      detail: { name: newName },
+      bubbles: true,
+      composed: true,
+    });
+
+    // TODO: When this becomes a web component, dispatch the event from this component.
+    this.drpDocuments.dispatchEvent(newEvent);
   }
 
-  open() {}
+  formatDateTime(d: Date = new Date()): string {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
 
-  rename() {}
+    return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
+  }
+
+  open() {
+    throw new Error("unimplemented");
+  }
+
+  rename() {
+    throw new Error("unimplemented");
+  }
 
   remove(docName: string) {
     const items = Array.from(

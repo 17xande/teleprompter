@@ -167,6 +167,12 @@ export class Teleprompter {
       this.ifrmPreview.contentDocument.body.style.overflow = "hidden";
       this.updateMain();
     });
+
+    // TODO: when docControls becomes a WebComponent, listen directly to it.
+    this.docControls.drpDocuments.addEventListener(
+      "new",
+      () => this.quill.setText(""),
+    );
   }
 
   listenPop() {
@@ -248,17 +254,6 @@ export class Teleprompter {
     if (!this.viewerWindow) return;
     this.viewer = this.viewerWindow.viewer;
     this.viewer.setContent(editor.innerHTML);
-  }
-
-  formatDateTime(d: Date = new Date()): string {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const hh = String(d.getHours()).padStart(2, "0");
-    const min = String(d.getMinutes()).padStart(2, "0");
-    const ss = String(d.getSeconds()).padStart(2, "0");
-
-    return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
   }
 
   listenResize(innerWidth: number, innerHeight: number) {
