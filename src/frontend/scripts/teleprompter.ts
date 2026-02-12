@@ -33,7 +33,7 @@ import "@awesome.me/webawesome/dist/styles/utilities.css";
 // import "@awesome.me/webawesome/dist/styles/themes/awesome.css";
 
 import "../styles/style.css";
-import { DocControls } from "./doc.ts";
+import { Doc, DocControls } from "./doc.ts";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -172,6 +172,17 @@ export class Teleprompter {
     this.docControls.drpDocuments.addEventListener(
       "new",
       () => this.quill.setText(""),
+    );
+
+    this.docControls.drpDocuments.addEventListener(
+      "load",
+      (e: CustomEventInit<Doc>) => {
+        if (!e.detail) {
+          throw new Error("expecting Doc but got undefined?");
+        }
+        const parsedDoc = JSON.parse(e.detail.content);
+        this.quill.setContents(parsedDoc);
+      },
     );
   }
 

@@ -151,32 +151,46 @@ export class DocControls {
   listenDropSelect(e: WaSelectEvent) {
     console.log(e);
     const item = e.detail.item as WaDropdownItem;
-    const action = item.value;
-    const docID = (item.parentElement as WaDropdownItem).value;
+    const docName = item.value;
+    const icon = <WaIcon> item.firstElementChild;
+    const action = icon.name;
 
-    const selectMap = {
-      open: null,
-      rename: null,
-      delete: null,
-    };
-  }
-
-  // loadDocument loads a document from storage, based on the document name.
-  loadDocument(docName: string, firstLoad = false) {
-    if (this.documents[docName]) {
-      const strDoc = this.documents[docName];
-      const parsedDoc = JSON.parse(strDoc);
-      if (parsedDoc) {
-        if (!firstLoad) {
-          this.saveDocument();
-        }
-        this.currentDocument = docName;
-        this.quill.setContents(parsedDoc);
-      }
+    switch (action) {
+      case "folder-open":
+        this.loadDocument(docName);
+        break;
+      case "pencil":
+        throw new Error("unimplemented");
+      case "trash":
+        throw new Error("unimplemented");
     }
   }
 
+  loadDocument(docName: string, firstLoad = false) {
+    const doc = this.docStorage.docs.get(docName);
+    if (!doc) {
+      console.warn(
+        `failed to load document "${docName}" because it doesn't exist`,
+      );
+      return;
+    }
+
+    const loadEvent = new CustomEvent<Doc>("load", {
+      detail: doc,
+      bubbles: true,
+      composed: true,
+    });
+
+    this.drpDocuments.dispatchEvent(loadEvent);
+
+    if (!firstLoad) {
+      this.docStorage.saveDoc(doc);
+    }
+    this.docStorage.setCurrent(doc.name);
+  }
+
   listenDropClick(e: PointerEvent) {
+    return;
     if (!(e.target instanceof WaDropdownItem)) {
       const icon = <WaIcon> e.target;
       const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
@@ -241,13 +255,13 @@ export class DocControls {
     const mnuItem = new WaDropdownItem();
 
     mnuItem.innerHTML = `${docName}
-      <wa-dropdown-item slot="submenu" value="Open">Open
+      <wa-dropdown-item slot="submenu" value="${docName}">Open
         <wa-icon slot="icon" name="folder-open" label="Open"></wa-icon>
       </wa-dropdown-item>
-      <wa-dropdown-item slot="submenu" value="rename">Rename
+      <wa-dropdown-item slot="submenu" value="${docName}">Rename
         <wa-icon slot="icon" name="pencil" label="Rename"></wa-icon>
       </wa-dropdown-item>
-      <wa-dropdown-item slot="submenu" value="delete" variant="danger">Delete
+      <wa-dropdown-item slot="submenu" value="${docName}" variant="danger">Delete
         <wa-icon slot="icon" name="trash" label="Delete"></wa-icon>
       </wa-dropdown-item>
     `;
