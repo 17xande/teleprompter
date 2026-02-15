@@ -17,45 +17,71 @@ export class Doc {
 }
 
 export class DocStorage {
-  currentDoc: Doc;
+  // TODO: Possible sync issue with current doc vs docs[currentdocname]. Consider storing only the docname here.
+  private currentDoc: Doc;
   // Use a Map for more efficient additions/deletions and less possible weirdness with objects.
-  // TODO: NO, don't use a map, serializing maps to/from JSON sucks. Use an object.
-  docs: Map<string, Doc>;
+  // TODO: NO, don't use a map, serializing maps to/from JSON requires hoop-jumping + performance penalty. Use a TypeScript Record<>.
+  private docs: Map<string, Doc>;
 
   constructor() {
-    // Initialise this here so LSP stops crying.
-    this.currentDoc = new Doc("newDocument", "");
-    // Check localStorage for data and load to memory.
-    const currentDocName = localStorage.getItem("currentDocument") ||
-      "newDocument";
     const jsonDocs = localStorage.getItem("documents");
     if (!jsonDocs) {
+      console.warn("no documents collection in localStorage. Creating one");
       this.docs = new Map<string, Doc>();
-      this.currentDoc = new Doc("newDocument", "");
+      this.currentDoc = new Doc(Utils.formatDateTime(), "New Document");
+      this.setDoc(this.currentDoc);
+      this.save();
       return;
     }
 
     this.docs = new Map(Object.entries(JSON.parse(jsonDocs)));
-    this.setCurrent(currentDocName);
-  }
 
-  setCurrent(docName: string): Doc {
-    let doc = this.docs.get(docName);
-    if (!doc) {
+    let currentDocName = localStorage.getItem("currentDocument");
+    if (!currentDocName) {
       console.warn(
-        `document ${docName} not found in storage. Creating empty document`,
+        "no currentDocument in localStorage. Setting it to the first document",
       );
-      this.currentDoc = new Doc(docName, "");
-      doc = this.currentDoc;
-    } else {
-      this.currentDoc = doc;
+      const first = this.docs.keys().next().value;
+      if (!first) {
+        throw new Error("no keys in document map, something has gone wrong.");
+      }
+      currentDocName = first;
     }
-    return doc;
+    this.currentDoc = this.docs.get(currentDocName)!;
+    this.save();
+
+    // TODO: Emit event that DocStorage is loaded.
   }
 
-  saveDoc(doc: Doc) {
+  load() {
+    const jsonDocs = localStorage.getItem("documents");
+    if (!jsonDocs) {
+      throw new Error("localstorage corrupted");
+    }
+
+    this.docs = new Map(Object.entries(JSON.parse(jsonDocs)));
+
+    const currentDocName = localStorage.getItem("currentDocument");
+    if (!currentDocName) {
+      throw new Error("localstorage corrupted");
+    }
+    this.setCurrent(this.docs.get(currentDocName)!);
+  }
+
+  getCurrent(): Doc {
+    return this.currentDoc;
+  }
+
+  setCurrent(doc: Doc) {
+    this.currentDoc = doc;
+  }
+
+  getDoc(docName: string): Doc | undefined {
+    return this.docs.get(docName);
+  }
+
+  setDoc(doc: Doc) {
     this.docs.set(doc.name, doc);
-    this.save();
   }
 
   save() {
@@ -67,13 +93,25 @@ export class DocStorage {
   }
 
   rename(doc: Doc, newName: string) {
+    const oldName = doc.name;
     doc.name = newName;
     this.currentDoc = doc;
-    this.saveDoc(doc);
+    this.setDoc(doc);
+    this.remove(oldName);
   }
+
   remove(docName: string) {
     this.docs.delete(docName);
-    this.save();
+  }
+
+  // TODO: figure out how to create an iterator to return docs. For now, just return the whole map.
+  // *docIterate() {
+  // for (const [_, doc] of this.docs) {
+  //   yield doc
+  // }
+
+  getDocs(): Map<string, Doc> {
+    return this.docs;
   }
 }
 
@@ -140,10 +178,13 @@ export class DocControls {
       this.remove(docName);
       this.dlgDelete.open = false;
     });
+
+    // TODO: Listen to dockstorage load event and populate dropdown.
   }
 
   populateDropdown() {
-    for (const [name, _] of this.docStorage.docs) {
+    const docs = this.docStorage.getDocs();
+    for (const [name, _] of docs) {
       this.addMenuItem(name);
     }
   }
@@ -167,7 +208,7 @@ export class DocControls {
   }
 
   loadDocument(docName: string, firstLoad = false) {
-    const doc = this.docStorage.docs.get(docName);
+    const doc = this.docStorage.getDoc(docName);
     if (!doc) {
       console.warn(
         `failed to load document "${docName}" because it doesn't exist`,
@@ -184,40 +225,41 @@ export class DocControls {
     this.drpDocuments.dispatchEvent(loadEvent);
 
     if (!firstLoad) {
-      this.docStorage.saveDoc(doc);
+      this.docStorage.setDoc(doc);
     }
-    this.docStorage.setCurrent(doc.name);
+    this.docStorage.setCurrent(doc);
   }
 
-  listenDropClick(e: PointerEvent) {
+  // TODO: remove this, use the web awesome DropSelect event
+  listenDropClick(_e: PointerEvent) {
     return;
-    if (!(e.target instanceof WaDropdownItem)) {
-      const icon = <WaIcon> e.target;
-      const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
-      switch (icon.name) {
-        case "pencil":
-          this.editPopup(menuItem);
-          break;
-        case "trash": {
-          this.dlgDelete.open = false;
-          const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
-            "input",
-          );
-          hidden.value = menuItem.value;
-          break;
-        }
-          // case "check":
-          //   this.nameSave(menuItem);
-          //   break;
-          // case "x":
-          //   this.nameEditCancel(menuItem);
-          //   break;
-      }
-      return;
-    } else {
-      const selected = e.target.value;
-      this.loadDocument(selected);
-    }
+    // if (!(e.target instanceof WaDropdownItem)) {
+    //   const icon = <WaIcon> e.target;
+    //   const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
+    //   switch (icon.name) {
+    //     case "pencil":
+    //       this.editPopup(menuItem);
+    //       break;
+    //     case "trash": {
+    //       this.dlgDelete.open = false;
+    //       const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
+    //         "input",
+    //       );
+    //       hidden.value = menuItem.value;
+    //       break;
+    //     }
+    //       // case "check":
+    //       //   this.nameSave(menuItem);
+    //       //   break;
+    //       // case "x":
+    //       //   this.nameEditCancel(menuItem);
+    //       //   break;
+    //   }
+    //   return;
+    // } else {
+    //   const selected = e.target.value;
+    //   this.loadDocument(selected);
+    // }
   }
 
   editPopup(mi: WaDropdownItem) {
@@ -231,13 +273,14 @@ export class DocControls {
   }
 
   nameSave(previousName: string, newName: string) {
-    const doc = this.docStorage.docs.get(previousName);
+    const doc = this.docStorage.getDoc(previousName);
     if (!doc) {
       throw new Error("can't rename document that doesn't exist?");
     }
-    this.docStorage.docs.set(newName, doc);
-    if (this.docStorage.currentDoc.name === previousName) {
-      this.docStorage.setCurrent(newName);
+    doc.name = newName;
+    this.docStorage.setDoc(doc);
+    if (this.docStorage.getCurrent().name === previousName) {
+      this.docStorage.setCurrent(doc);
     }
     const items = Array.from(
       this.drpDocuments.querySelectorAll("wa-dropdown-item"),
@@ -271,9 +314,10 @@ export class DocControls {
   }
 
   new() {
-    this.docStorage.save();
-    const newName = `document_${this.formatDateTime()}`;
-    this.docStorage.setCurrent(newName);
+    this.docStorage.setDoc(this.docStorage.getCurrent());
+    const newName = `document_${Utils.formatDateTime()}`;
+    const newDoc = new Doc(newName, "");
+    this.docStorage.setCurrent(newDoc);
     this.addMenuItem(newName);
     const newEvent = new CustomEvent("new", {
       detail: { name: newName },
@@ -283,17 +327,7 @@ export class DocControls {
 
     // TODO: When this becomes a web component, dispatch the event from this component.
     this.drpDocuments.dispatchEvent(newEvent);
-  }
-
-  formatDateTime(d: Date = new Date()): string {
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    const hh = String(d.getHours()).padStart(2, "0");
-    const min = String(d.getMinutes()).padStart(2, "0");
-    const ss = String(d.getSeconds()).padStart(2, "0");
-
-    return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
+    this.docStorage.setDoc(newDoc);
   }
 
   open() {
@@ -317,3 +351,17 @@ export class DocControls {
     this.docStorage.remove(docName);
   }
 }
+
+// Utility collection
+const Utils = {
+  formatDateTime(d: Date = new Date()): string {
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const ss = String(d.getSeconds()).padStart(2, "0");
+
+    return `${yyyy}${mm}${dd}-${hh}${min}${ss}`;
+  },
+};

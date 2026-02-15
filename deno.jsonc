@@ -18,7 +18,7 @@
     "src/frontend/scripts"
   ],
   "tasks": {
-    "dev": "deno task bundle-watch & deno task start",
+    "dev": "deno task clean; deno task bundle-watch & deno task start",
     "build": "deno task bundle",
     "start": "deno run --allow-net --allow-read -ESR jsr:@std/http/file-server dist",
     "clean": "rm -r dist/*",
