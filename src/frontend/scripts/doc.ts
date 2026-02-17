@@ -159,10 +159,6 @@ export class DocControls {
       "wa-select",
       this.listenDropSelect.bind(this),
     );
-    this.drpDocuments.addEventListener(
-      "click",
-      this.listenDropClick.bind(this),
-    );
 
     btnCancel.addEventListener("click", () => this.dlgSave.open = false);
     btnSave.addEventListener("click", () => {
@@ -211,7 +207,15 @@ export class DocControls {
       case "pencil":
         this.editPopup(item);
         break;
-      case "trash":
+      case "trash": {
+        this.dlgDelete.open = true;
+        const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
+          "input",
+        );
+        hidden.value = item.value;
+        break;
+      }
+      default:
         throw new Error("unimplemented");
     }
   }
@@ -237,38 +241,6 @@ export class DocControls {
     });
 
     this.drpDocuments.dispatchEvent(loadEvent);
-  }
-
-  // TODO: remove this, use the web awesome DropSelect event
-  listenDropClick(_e: PointerEvent) {
-    return;
-    // if (!(e.target instanceof WaDropdownItem)) {
-    //   const icon = <WaIcon> e.target;
-    //   const menuItem: WaDropdownItem = icon.closest("wa-dropdown-item")!;
-    //   switch (icon.name) {
-    //     case "pencil":
-    //       this.editPopup(menuItem);
-    //       break;
-    //     case "trash": {
-    //       this.dlgDelete.open = false;
-    //       const hidden = <HTMLInputElement> this.dlgDelete.querySelector(
-    //         "input",
-    //       );
-    //       hidden.value = menuItem.value;
-    //       break;
-    //     }
-    //       // case "check":
-    //       //   this.nameSave(menuItem);
-    //       //   break;
-    //       // case "x":
-    //       //   this.nameEditCancel(menuItem);
-    //       //   break;
-    //   }
-    //   return;
-    // } else {
-    //   const selected = e.target.value;
-    //   this.loadDocument(selected);
-    // }
   }
 
   editPopup(mi: WaDropdownItem) {
@@ -328,7 +300,9 @@ export class DocControls {
     const newName = `document_${Utils.formatDateTime()}`;
     const newDoc = new Doc(newName, "");
     this.docStorage.setCurrent(newDoc);
-    this.addMenuItem(newName);
+    const mi = this.genMenuItem(newName);
+    this.drpDocuments.appendChild(mi);
+
     const newEvent = new CustomEvent("new", {
       detail: { name: newName },
       bubbles: true,
