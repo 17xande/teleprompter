@@ -174,9 +174,10 @@ export class Teleprompter {
     this.editingName = "";
     this.quill.on("text-change", () => {
       const quillContents = this.quill.getContents();
-      this.docControls.docStorage.currentDoc.content = JSON.stringify(
+      const content = JSON.stringify(
         quillContents,
       );
+      this.docControls.docStorage.setCurrentContent(content);
       this.docControls.docStorage.save();
     });
 

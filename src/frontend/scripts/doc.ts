@@ -76,6 +76,11 @@ export class DocStorage {
     this.currentDoc = doc;
   }
 
+  setCurrentContent(content: string) {
+    this.currentDoc.content = content;
+    this.setDoc(this.currentDoc);
+  }
+
   getDoc(docName: string): Doc | undefined {
     return this.docs.get(docName);
   }
@@ -199,6 +204,7 @@ export class DocControls {
 
     switch (action) {
       case "folder-open":
+        this.docStorage.save();
         this.loadDocument(docName);
         break;
       case "pencil":
@@ -217,6 +223,11 @@ export class DocControls {
       return;
     }
 
+    // if (!firstLoad) {
+    //   this.docStorage.setDoc(doc);
+    // }
+    this.docStorage.setCurrent(doc);
+
     const loadEvent = new CustomEvent<Doc>("load", {
       detail: doc,
       bubbles: true,
@@ -224,11 +235,6 @@ export class DocControls {
     });
 
     this.drpDocuments.dispatchEvent(loadEvent);
-
-    if (!firstLoad) {
-      this.docStorage.setDoc(doc);
-    }
-    this.docStorage.setCurrent(doc);
   }
 
   // TODO: remove this, use the web awesome DropSelect event
