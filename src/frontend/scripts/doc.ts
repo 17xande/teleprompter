@@ -191,7 +191,8 @@ export class DocControls {
   populateDropdown() {
     const docs = this.docStorage.getDocs();
     for (const [name, _] of docs) {
-      this.addMenuItem(name);
+      const mi = this.genMenuItem(name);
+      this.drpDocuments.appendChild(mi);
     }
   }
 
@@ -208,7 +209,8 @@ export class DocControls {
         this.loadDocument(docName);
         break;
       case "pencil":
-        throw new Error("unimplemented");
+        this.editPopup(item);
+        break;
       case "trash":
         throw new Error("unimplemented");
     }
@@ -296,12 +298,13 @@ export class DocControls {
     if (!mi) {
       throw new Error("menu item does not exist");
     }
-    this.remove(previousName);
-    this.addMenuItem(newName);
+    const newItem = this.genMenuItem(newName);
+    mi.value = newItem.value;
+    mi.innerHTML = newItem.innerHTML;
     this.docStorage.save();
   }
 
-  addMenuItem(docName: string) {
+  private genMenuItem(docName: string) {
     const mnuItem = new WaDropdownItem();
 
     mnuItem.innerHTML = `${docName}
@@ -317,7 +320,7 @@ export class DocControls {
     `;
     const m = <WaDropdownItem> mnuItem.cloneNode(true);
     m.value = docName;
-    this.drpDocuments.appendChild(m);
+    return m;
   }
 
   new() {
