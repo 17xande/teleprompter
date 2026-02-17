@@ -124,14 +124,15 @@ export class DocControls {
   docStorage: DocStorage;
 
   constructor() {
-    this.docStorage = new DocStorage();
-    this.populateDropdown();
-
     // Class Selectors
     this.btnNew = document.querySelector("#btnNew")!;
     this.drpDocuments = document.querySelector("#drpDocuments")!;
     this.dlgSave = document.querySelector("#dlgRename")!;
     this.dlgDelete = document.querySelector("#dlgDelete")!;
+
+    this.docStorage = new DocStorage();
+    this.loadDocument(this.docStorage.getCurrent().name);
+    this.populateDropdown();
 
     // Dialog Selectors
     const btnSave: WaButton = this.dlgSave.querySelector(

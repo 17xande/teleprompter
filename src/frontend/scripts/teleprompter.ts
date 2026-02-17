@@ -22,7 +22,7 @@ import WaSlider from "@awesome.me/webawesome/dist/components/slider/slider.js";
 const check = WaSplitPanel && WaButton && WaDialog && WaDropdown &&
   WaDropdownItem && WaIcon &&
   WaInput && WaSlider;
-console.log(check);
+console.log(check != undefined);
 
 // CSS imports
 import "quill/dist/quill.snow.css";
@@ -92,9 +92,11 @@ export class Teleprompter {
   btnPop: WaButton;
 
   constructor() {
+    // Register web components.
     registerClockComponent();
     registerClockControlComponent();
-    this.docControls = new DocControls();
+
+    // Select elements.
     this.btnPop = document.querySelector("#btnPop")!;
     this.splitPanel = document.querySelector("wa-split-panel")!;
     this.btnMessage = document.querySelector("#btnMessage")!;
@@ -106,6 +108,39 @@ export class Teleprompter {
     this.ifrmPreview = <HTMLIFrameElement> document.querySelector(
       "#ifrmPreview",
     );
+
+    this.popDimensions = {
+      width: 200,
+      height: 150,
+      x: 100,
+      y: 100,
+    };
+
+    this.quill = new Quill("#editor", options);
+    this.docControls = new DocControls();
+
+    // Event listeners.
+    // TODO: when docControls becomes a WebComponent, listen directly to it.
+    this.docControls.drpDocuments.addEventListener(
+      "new",
+      () => this.quill.setText(""),
+    );
+
+    this.docControls.drpDocuments.addEventListener(
+      "load",
+      (e: CustomEventInit<Doc>) => {
+        if (!e.detail) {
+          throw new Error("expecting Doc but got undefined?");
+        }
+        const parsedDoc = JSON.parse(e.detail.content);
+        this.quill.setContents(parsedDoc);
+      },
+    );
+
+    this.docControls.loadDocument(
+      this.docControls.docStorage.getCurrent().name,
+    );
+
     this.btnPop.addEventListener("click", this.listenPop.bind(this));
     this.btnMessage.addEventListener("click", this.listenMessage.bind(this));
     this.rngSpeed.addEventListener("wheel", this.listenSpeedWheel.bind(this), {
@@ -137,14 +172,6 @@ export class Teleprompter {
     );
 
     this.editingName = "";
-    this.popDimensions = {
-      width: 200,
-      height: 150,
-      x: 100,
-      y: 100,
-    };
-
-    this.quill = new Quill("#editor", options);
     this.quill.on("text-change", () => {
       const quillContents = this.quill.getContents();
       this.docControls.docStorage.currentDoc.content = JSON.stringify(
@@ -167,23 +194,6 @@ export class Teleprompter {
       this.ifrmPreview.contentDocument.body.style.overflow = "hidden";
       this.updateMain();
     });
-
-    // TODO: when docControls becomes a WebComponent, listen directly to it.
-    this.docControls.drpDocuments.addEventListener(
-      "new",
-      () => this.quill.setText(""),
-    );
-
-    this.docControls.drpDocuments.addEventListener(
-      "load",
-      (e: CustomEventInit<Doc>) => {
-        if (!e.detail) {
-          throw new Error("expecting Doc but got undefined?");
-        }
-        const parsedDoc = JSON.parse(e.detail.content);
-        this.quill.setContents(parsedDoc);
-      },
-    );
   }
 
   listenPop() {
