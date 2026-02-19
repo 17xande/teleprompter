@@ -260,8 +260,8 @@ export class Teleprompter {
     if (!txtMessage) {
       throw new Error("No Message input found.");
     }
-    console.log(txtMessage.value);
     this.viewerWindow.viewer.setMessage(txtMessage.value || "");
+    this.previewer?.setMessage(txtMessage.value || "");
   }
 
   updateMain() {
