@@ -15,14 +15,22 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [x] Add control page text scale component
 - [x] Prompt message
 - [x] Keep prompter display settings on next open
-- [x] Stop multiple clock cycles when multiple clock start button presses
 - [x] Space bar scroll start/stop
 - [x] On update content, scroll to same location
 - [x] Red negative clock
 - [x] Store and retrieve multiple documents
 - [x] Change scroll speed progress control to a vertical scale control
 - [x] Omit hours counter from countdown clock
-- [ ] Add preview pane.
+- [x] Add preview pane.
+- [x] Switch shoelace for webawesome.
+- [ ] Multiple layouts (Text & Clock, Big Clock, etc)
+- [ ] Layout selection interface
+- [ ] Detect screen layout - display on second screen on full screen
+
+## Bugs
+
+- [x] Stop multiple clock cycles when multiple clock start button presses
+- [ ] Space bar is scrolling control interface
 
 ## Future
 
@@ -30,12 +38,10 @@ An open source teleprompter running in your browser. What a time to be alive.
 - [ ] Keep pop link when refreshing control page (for now, clicking POP again will relink and rerender)
 - [ ] Keep clocks running when refreshing popup.
 - [ ] Automatically invert dark text on paste
-- [ ] Switch shoelace for webawesome.
 - [ ] Keep prompter display position on screen after being moved (requires polling)
 - [ ] Keyboard shortcuts
   - [ ] clocks
   - [ ] font colour
-- [ ] Prompter preview render
 - [ ] Rename project to "Prompter"?
 - [ ] Prompter themes/layouts (CSS based)
 - [ ] User accounts
