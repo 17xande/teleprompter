@@ -5,7 +5,7 @@ import { Teleprompter } from "./teleprompter.ts";
 // CSS imports.
 import "quill/dist/quill.snow.css";
 import "@awesome.me/webawesome/dist/styles/themes/shoelace.css";
-import "../styles/pop.css";
+import "../styles/popThemesDefault.css";
 
 export class Viewer {
   controller: Teleprompter | null = null;

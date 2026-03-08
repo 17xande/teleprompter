@@ -1,0 +1,85 @@
+@import ./popBase.css
+
+@property --textScale {
+  syntax: "number";
+  inherits: false;
+  initial-value: 0;
+}
+
+@scope (.theme-default) {
+  .pop-clocks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8vi;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: black;
+
+    .left,
+    .right {
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+
+    .mid {
+      /* flex: 1 1 auto; */
+      text-align: center;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      color: red;
+    }
+
+    time[type="timer"] {
+      color: yellow;
+    }
+
+    /* TODO: move this to clock.css? Best way of web components css? */
+    time[type="timer"].negative {
+      color: red;
+    }
+
+  }
+
+  .ql-container {
+    font-size: var(--textScale);
+  }
+}
+
+@scope (.theme-big-clock) {
+  .pop-clocks {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    height: 100vh;
+
+    .left,
+    .right {
+      font-size: 22cqw;
+    }
+
+    .mid {
+      /* flex: 1 1 auto; */
+      text-align: center;
+      min-width: 0;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      color: red;
+    }
+
+    time[type="timer"] {
+      color: yellow;
+    }
+
+    /* TODO: move this to clock.css? Best way of web components css? */
+    time[type="timer"].negative {
+      color: red;
+    }
+  }
+}
