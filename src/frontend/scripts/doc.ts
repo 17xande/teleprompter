@@ -193,7 +193,6 @@ export class DocControls {
   }
 
   listenDropSelect(e: WaSelectEvent) {
-    console.log(e);
     const item = e.detail.item as WaDropdownItem;
     const docName = item.value;
     const icon = <WaIcon> item.firstElementChild;

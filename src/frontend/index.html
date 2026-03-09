@@ -37,6 +37,17 @@
         <div id="divIFrameContainer">
           <iframe id="ifrmPreview" src="/html/pop.html"></iframe>
         </div>
+        <wa-dropdown id="drpLayouts">
+          <wa-button slot="trigger" with-caret>Viewer Layout
+            <wa-icon slot="start" name="window-maximize"></wa-icon>
+          </wa-button>
+          <wa-dropdown-item value="theme-default">Clocks & Text
+            <wa-icon slot="icon" name="window-maximize"></wa-icon>
+          </wa-dropdown-item>
+          <wa-dropdown-item value="theme-big-clock">Big Clocks
+            <wa-icon slot="icon" name="clock"></wa-icon>
+          </wa-dropdown-item>
+        </wa-dropdown>
       </fieldset>
       <fieldset class="wa-cluster divSliders">
         <legend>Controls</legend>

@@ -34,6 +34,7 @@ import "@awesome.me/webawesome/dist/styles/utilities.css";
 
 import "../styles/style.css";
 import { Doc, DocControls } from "./doc.ts";
+import { WaSelectEvent } from "@awesome.me/webawesome";
 
 const toolbarOptions: ToolbarConfig = [
   ["bold", "italic", "underline", "strike"], // toggled buttons
@@ -80,6 +81,7 @@ export class Teleprompter {
   quill: Quill;
   rngSpeed: WaSlider;
   rngScale: WaSlider;
+  drpLayouts: WaDropdown;
   tpClockControl: TPClockControl;
   viewerWindow: Window | null = null;
   viewer: Viewer | null = null;
@@ -104,6 +106,7 @@ export class Teleprompter {
     this.rngScale = document.querySelector("#rngScale")!;
     this.controls = document.querySelector("#controls")!;
     this.tpClockControl = document.querySelector("#tpClockControl")!;
+    this.drpLayouts = document.querySelector("#drpLayouts")!;
 
     this.ifrmPreview = <HTMLIFrameElement> document.querySelector(
       "#ifrmPreview",
@@ -135,6 +138,11 @@ export class Teleprompter {
         const parsedDoc = JSON.parse(e.detail.content);
         this.quill.setContents(parsedDoc);
       },
+    );
+
+    this.drpLayouts.addEventListener(
+      "wa-select",
+      this.listenLayoutSelect.bind(this),
     );
 
     this.docControls.loadDocument(
@@ -208,6 +216,17 @@ export class Teleprompter {
     }
 
     this.viewerWindow = win;
+  }
+
+  listenLayoutSelect(e: WaSelectEvent) {
+    const item = e.detail.item as WaDropdownItem;
+    const layout = item.value;
+    if (this.ifrmPreview.contentDocument) {
+      this.ifrmPreview.contentDocument.body.className = layout;
+    }
+    if (this.viewerWindow) {
+      this.viewerWindow.document.body.className = layout;
+    }
   }
 
   listenSpeedWheel(e: WheelEvent) {
