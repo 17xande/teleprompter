@@ -50,6 +50,10 @@
 }
 
 @scope (.theme-big-clock) {
+  .ql-container {
+    display: none;
+  }
+
   .pop-clocks {
     display: flex;
     flex-direction: column;
