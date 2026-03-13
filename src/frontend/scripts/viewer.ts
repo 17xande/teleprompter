@@ -18,6 +18,7 @@ export class Viewer {
   messageMin = 10;
   messageMax = 75;
   scroll = false;
+  isPreviewer = false;
   isScrolling = false;
   isResizing = false;
   scrollY = 0;
@@ -38,6 +39,7 @@ export class Viewer {
       // Detect if it's an iframe
       if (globalThis.self !== globalThis.top) {
         controllerWindow = globalThis.parent;
+        this.isPreviewer = true;
       }
       this.controller = controllerWindow.teleprompter;
       this.controller?.updateMain();
@@ -66,9 +68,12 @@ export class Viewer {
       this.startSmoothScroll();
     });
 
-    if (globalThis.self == globalThis.top) {
-      globalThis.addEventListener("scroll", this.listenScroll.bind(this));
-      globalThis.addEventListener("resize", this.listenResize.bind(this));
+    if (!this.isPreviewer) {
+      self.addEventListener("scroll", this.listenScroll.bind(this));
+      self.addEventListener("resize", this.listenResize.bind(this));
+      self.addEventListener("dblclick", () => {
+        document.documentElement.requestFullscreen();
+      });
     }
   }
 

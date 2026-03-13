@@ -208,13 +208,14 @@ export class Teleprompter {
   async listenPop() {
     const screenDetails = await self.getScreenDetails();
     const secondary = screenDetails.screens.find((s) => !s.isPrimary);
+    // TODO: This is not correct. saved option should prioritise this, but this is a good POC for now.
     if (secondary) {
       this.popDimensions.width = secondary.width;
       this.popDimensions.height = secondary.height;
       this.popDimensions.x = secondary.left;
       this.popDimensions.y = secondary.top;
     }
-    const win = globalThis.open(
+    const win = self.open(
       "/html/pop.html",
       "pop",
       `popup=true,width=${this.popDimensions.width},height=${this.popDimensions.height},screenX=${this.popDimensions.x},screenY=${this.popDimensions.y}`,
