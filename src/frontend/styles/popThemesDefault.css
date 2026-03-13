@@ -1,4 +1,4 @@
-@import ./popBase.css
+@import "./popBase.css";
 
 @property --textScale {
   syntax: "number";
@@ -71,6 +71,7 @@
       overflow-wrap: anywhere;
       white-space: normal;
       color: red;
+      order: -1;
     }
 
     time[type="timer"] {

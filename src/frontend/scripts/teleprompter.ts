@@ -205,7 +205,15 @@ export class Teleprompter {
     });
   }
 
-  listenPop() {
+  async listenPop() {
+    const screenDetails = await self.getScreenDetails();
+    const secondary = screenDetails.screens.find((s) => !s.isPrimary);
+    if (secondary) {
+      this.popDimensions.width = secondary.width;
+      this.popDimensions.height = secondary.height;
+      this.popDimensions.x = secondary.left;
+      this.popDimensions.y = secondary.top;
+    }
     const win = globalThis.open(
       "/html/pop.html",
       "pop",
