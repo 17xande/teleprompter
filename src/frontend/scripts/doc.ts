@@ -10,7 +10,7 @@ export class Doc {
   name: string;
   content: string;
 
-  constructor(name: string, content: string) {
+  constructor(name: string, content: string = "") {
     this.name = name;
     this.content = content;
   }
@@ -28,7 +28,10 @@ export class DocStorage {
     if (!jsonDocs) {
       console.warn("no documents collection in localStorage. Creating one");
       this.docs = new Map<string, Doc>();
-      this.currentDoc = new Doc(Utils.formatDateTime(), "New Document");
+      this.currentDoc = new Doc(
+        Utils.formatDateTime(),
+        `{"ops":[{"insert":"New Document"}]}`,
+      );
       this.setDoc(this.currentDoc);
       this.save();
       return;
@@ -98,15 +101,14 @@ export class DocStorage {
   }
 
   rename(doc: Doc, newName: string) {
-    const oldName = doc.name;
-    doc.name = newName;
-    this.currentDoc = doc;
-    this.setDoc(doc);
-    this.remove(oldName);
+    const newDoc = new Doc(newName, doc.content);
+    this.currentDoc = newDoc;
+    this.setDoc(newDoc);
+    this.remove(doc);
   }
 
-  remove(docName: string) {
-    this.docs.delete(docName);
+  remove(doc: Doc) {
+    this.docs.delete(doc.name);
   }
 
   // TODO: figure out how to create an iterator to return docs. For now, just return the whole map.
@@ -257,11 +259,8 @@ export class DocControls {
     if (!doc) {
       throw new Error("can't rename document that doesn't exist?");
     }
-    doc.name = newName;
-    this.docStorage.setDoc(doc);
-    if (this.docStorage.getCurrent().name === previousName) {
-      this.docStorage.setCurrent(doc);
-    }
+    this.docStorage.rename(doc, newName);
+
     const items = Array.from(
       this.drpDocuments.querySelectorAll("wa-dropdown-item"),
     );
